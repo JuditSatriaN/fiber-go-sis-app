@@ -1,5 +1,6 @@
 $(function () {
     initTable();
+    $("#barcode").numeric({decimal: false, negative: false});
 })
 
 
@@ -23,18 +24,16 @@ window.eventActions = {
 
 function initTable() {
     $('#table').bootstrapTable({
-        fixedNumber: 2,
-        fixedColumns: true,
         locale: $('#locale').val(),
         columns: [
             [
                 {
                     width: 150,
+                    title: 'PLU',
+                    field: 'plu',
                     align: 'left',
                     widthUnit: "px",
                     valign: 'middle',
-                    title: 'ID Barang',
-                    field: 'product_id',
                 },
                 {
                     width: 350,
@@ -53,14 +52,6 @@ function initTable() {
                     valign: 'middle',
                 },
                 {
-                    width: 150,
-                    title: 'Stok',
-                    field: 'stock',
-                    align: 'center',
-                    widthUnit: "px",
-                    valign: 'middle',
-                },
-                {
                     width: 100,
                     title: 'PPN',
                     field: 'ppn',
@@ -68,33 +59,6 @@ function initTable() {
                     align: 'center',
                     valign: 'middle',
                     formatter: checkboxFormatter
-                },
-                {
-                    width: 200,
-                    title: 'Harga',
-                    field: 'price',
-                    align: 'center',
-                    widthUnit: "px",
-                    valign: 'middle',
-                    formatter: priceFormatter
-                },
-                {
-                    width: 200,
-                    align: 'center',
-                    widthUnit: "px",
-                    valign: 'middle',
-                    title: 'Harga Member',
-                    field: 'member_price',
-                    formatter: priceFormatter
-                },
-                {
-                    width: 200,
-                    align: 'center',
-                    widthUnit: "px",
-                    valign: 'middle',
-                    title: 'Diskon',
-                    field: 'discount',
-                    formatter: priceFormatter
                 },
                 {
                     width: 200,
@@ -117,10 +81,12 @@ async function sendGetProductRequest(params) {
         page = (params.data["offset"] / params.data["limit"]) + 1
     }
 
+    console.log("REQ SEARCH : ", req["search"])
+
     const response = await axios({
         method: 'GET',
         url: baseURL + "svc/dt_products",
-        data: {
+        params: {
             "page": page,
             "limit": req["limit"],
             "search": req["search"],
@@ -133,6 +99,7 @@ function ajaxRequest(params) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
     sendGetProductRequest(params).then(function (results) {
+        console.log("SUCCESS : ", results)
         params.success(results);
     }).catch(function (err) {
         params.error(err);
@@ -143,7 +110,7 @@ function ajaxRequest(params) {
 }
 
 function clearFormInput() {
-    $("#modalUpsert #product_id").val("");
+    $("#modalUpsert #plu").val("");
     $("#modalUpsert #name").val("");
     $("#modalUpsert #barcode").val("0");
     $("#modalUpsert #stock").val("0");

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    user_id     VARCHAR(30)  NOT NULL UNIQUE PRIMARY KEY,
+    user_id     VARCHAR(30)  NOT NULL PRIMARY KEY,
     user_name   VARCHAR(30)  NOT NULL UNIQUE,
     full_name   VARCHAR(255) NOT NULL DEFAULT '',
     password    VARCHAR(255) NOT NULL DEFAULT '',

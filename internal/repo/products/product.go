@@ -2,25 +2,45 @@ package products
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 
 	postgresPkg "github.com/fiber-go-sis-app/utils/pkg/databases/postgres"
 
-	productEntity "github.com/fiber-go-sis-app/internal/entity/product"
+	productEntity "github.com/fiber-go-sis-app/internal/entity/products"
 )
 
-const queryGetProductByID = `
-	SELECT product_id, name, barcode, stock, ppn, price, member_price, discount, category_id
+const queryGetALlProducts = `
+	SELECT plu, name, barcode, ppn
 	FROM products
-	WHERE product_id = $1
+	WHERE $1 = '' OR value_text_search @@ to_tsquery($1)
+	LIMIT $2
+	OFFSET $3
 `
 
-func GetProductByID(ctx *fiber.Ctx, productID string) (productEntity.Product, bool, error) {
+func GetALlProducts(ctx *fiber.Ctx, search string, limit int, offset int) ([]productEntity.Product, error) {
+	fmt.Println("SEARCH : ", search)
+	var product []productEntity.Product
+	db := postgresPkg.GetPgConn()
+
+	if err := db.SelectContext(ctx.Context(), &product, queryGetALlProducts, search, limit, offset); err != nil {
+		return product, err
+	}
+	return product, nil
+}
+
+const queryGetProductByPLU = `
+	SELECT plu, name, barcode, ppn
+	FROM products
+	WHERE plu = $1
+`
+
+func GetProductByPLU(ctx *fiber.Ctx, PLU string) (productEntity.Product, bool, error) {
 	var product productEntity.Product
 	db := postgresPkg.GetPgConn()
 
-	if err := db.GetContext(ctx.Context(), &product, queryGetProductByID, productID); err != nil {
+	if err := db.GetContext(ctx.Context(), &product, queryGetProductByPLU, PLU); err != nil {
 		if err == sql.ErrNoRows {
 			return product, false, nil
 		}
@@ -29,21 +49,21 @@ func GetProductByID(ctx *fiber.Ctx, productID string) (productEntity.Product, bo
 	return product, true, nil
 }
 
-const queryGetProductByIDOrBarcode = `
-	(SELECT product_id, name, barcode, stock, ppn, price, member_price, discount, category_id
+const queryGetProductByPLUOrBarcode = `
+	(SELECT plu, name, barcode, ppn
 	FROM products
-	WHERE product_id = $1)
+	WHERE plu = $1)
 	UNION
-	(SELECT product_id, name, barcode, stock, ppn, price, member_price, discount, category_id
+	(SELECT plu, name, barcode, ppn
 	FROM products
 	WHERE barcode = $1)
 `
 
-func GetProductByIDOrBarcode(ctx *fiber.Ctx, search string) (productEntity.Product, bool, error) {
+func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) (productEntity.Product, bool, error) {
 	var product productEntity.Product
 	db := postgresPkg.GetPgConn()
 
-	if err := db.GetContext(ctx.Context(), &product, queryGetProductByIDOrBarcode, search); err != nil {
+	if err := db.GetContext(ctx.Context(), &product, queryGetProductByPLUOrBarcode, search); err != nil {
 		if err == sql.ErrNoRows {
 			return product, false, nil
 		}
@@ -53,8 +73,8 @@ func GetProductByIDOrBarcode(ctx *fiber.Ctx, search string) (productEntity.Produ
 }
 
 const insertProduct = `
-	INSERT INTO products (product_id, name, barcode, stock, ppn, price, member_price, discount, category_id)
-	VALUES (:product_id, :name, :barcode, :stock, :ppn, :price, :member_price, :discount, :category_id)
+	INSERT INTO products (plu, name, barcode, ppn)
+	VALUES (:plu, :name, :barcode, :ppn)
 `
 
 func InsertProduct(ctx *fiber.Ctx, product productEntity.Product) error {
@@ -68,14 +88,9 @@ const updateProduct = `
 	UPDATE products SET
 		name = :name,
 	    barcode = :barcode,
-	    stock = :stock,
 	    ppn = :ppn,
-	    price = :price,
-	    member_price = :member_price,
-	    discount = :discount,
-	    category_id = :category_id,
 		update_time = NOW()
-	WHERE product_id = :product_id
+	WHERE plu = :plu
 `
 
 func UpdateProduct(ctx *fiber.Ctx, product productEntity.Product) error {
@@ -87,7 +102,7 @@ func UpdateProduct(ctx *fiber.Ctx, product productEntity.Product) error {
 
 const deleteProduct = `
 	DELETE FROM products
-	WHERE product_id = $1
+	WHERE plu = $1
 `
 
 func DeleteProduct(ctx *fiber.Ctx, productID string) error {

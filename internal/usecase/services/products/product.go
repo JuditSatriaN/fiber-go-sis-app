@@ -3,37 +3,40 @@ package products
 import (
 	"errors"
 	"fmt"
+	storeEntity "github.com/fiber-go-sis-app/internal/entity/stores"
+	customPkg "github.com/fiber-go-sis-app/utils/pkg/custom"
 
 	"github.com/gofiber/fiber/v2"
 
 	constantsEntity "github.com/fiber-go-sis-app/internal/entity/constants"
-	productEntity "github.com/fiber-go-sis-app/internal/entity/product"
+	productEntity "github.com/fiber-go-sis-app/internal/entity/products"
 
 	productRepo "github.com/fiber-go-sis-app/internal/repo/products"
+	storeRepo "github.com/fiber-go-sis-app/internal/repo/stores"
 )
 
-//// GetDTAllProduct : Get List Of Product for Datatable
-//func GetDTAllProduct(ctx *fiber.Ctx, page int, limit int, search string) (productEntity.ListProductDataResponse, error) {
-//	esLimit, offset := customPkg.BuildOffsetAndLimitES(page, limit)
-//
-//	products, err := productRepo.GetProductByID(ctx, offset, esLimit, search)
-//	if err != nil {
-//		return productEntity.ListProductDataResponse{}, err
-//	}
-//
-//	totalProduct, err := productRepo.GetCountProductES(ctx, search)
-//	if err != nil {
-//		return productEntity.ListProductDataResponse{}, err
-//	}
-//
-//	return productEntity.ListProductDataResponse{
-//		Total: totalProduct,
-//		Data:  products,
-//	}, nil
-//}
+// GetDTAllProduct : Get List Of Product for Datatable
+func GetDTAllProduct(ctx *fiber.Ctx, page int, limit int, search string) (productEntity.ListProductDataResponse, error) {
+	offset := customPkg.BuildOffset(page, limit)
 
-func GetProductByID(ctx *fiber.Ctx, ID string) (productEntity.Product, error) {
-	product, found, err := productRepo.GetProductByID(ctx, ID)
+	products, err := productRepo.GetALlProducts(ctx, search, limit, offset)
+	if err != nil {
+		return productEntity.ListProductDataResponse{}, err
+	}
+
+	storeStats, err := storeRepo.GetStoreStats(ctx, storeEntity.DefaultStoreID)
+	if err != nil {
+		return productEntity.ListProductDataResponse{}, err
+	}
+
+	return productEntity.ListProductDataResponse{
+		Total: storeStats.CntProduct,
+		Data:  products,
+	}, nil
+}
+
+func GetProductByPLU(ctx *fiber.Ctx, PLU string) (productEntity.Product, error) {
+	product, found, err := productRepo.GetProductByPLU(ctx, PLU)
 	if err != nil {
 		return productEntity.Product{}, err
 	}
@@ -45,8 +48,8 @@ func GetProductByID(ctx *fiber.Ctx, ID string) (productEntity.Product, error) {
 	return product, nil
 }
 
-func GetProductByIDOrBarcode(ctx *fiber.Ctx, search string) (productEntity.Product, error) {
-	product, found, err := productRepo.GetProductByIDOrBarcode(ctx, search)
+func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) (productEntity.Product, error) {
+	product, found, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
 	if err != nil {
 		return productEntity.Product{}, err
 	}
@@ -67,7 +70,7 @@ func InsertProduct(ctx *fiber.Ctx, product productEntity.Product) error {
 }
 
 func UpdateProduct(ctx *fiber.Ctx, product productEntity.Product) error {
-	if _, err := GetProductByID(ctx, product.ProductID); err != nil {
+	if _, err := GetProductByPLU(ctx, product.PLU); err != nil {
 		return err
 	}
 
@@ -77,27 +80,36 @@ func UpdateProduct(ctx *fiber.Ctx, product productEntity.Product) error {
 	return nil
 }
 
-func DeleteProduct(ctx *fiber.Ctx, productID string) error {
-	if _, err := GetProductByID(ctx, productID); err != nil {
+func DeleteProduct(ctx *fiber.Ctx, PLU string) error {
+	if _, err := GetProductByPLU(ctx, PLU); err != nil {
 		return err
 	}
 
-	if err := productRepo.DeleteProduct(ctx, productID); err != nil {
+	if err := productRepo.DeleteProduct(ctx, PLU); err != nil {
 		return err
 	}
 
-	return nil
+	err := storeRepo.UpdateTotalProduct(ctx, storeEntity.StoreStats{
+		StoreID:    storeEntity.DefaultStoreID,
+		CntProduct: -1,
+	})
+
+	return err
 }
 
 func UpsertProduct(ctx *fiber.Ctx, product productEntity.Product) error {
 	var err error
-	_, found, err := productRepo.GetProductByID(ctx, product.ProductID)
+	_, found, err := productRepo.GetProductByPLU(ctx, product.PLU)
 	if err != nil {
 		return err
 	}
 
 	if !found {
 		err = productRepo.InsertProduct(ctx, product)
+		err = storeRepo.UpdateTotalProduct(ctx, storeEntity.StoreStats{
+			StoreID:    storeEntity.DefaultStoreID,
+			CntProduct: 1,
+		})
 	} else {
 		err = productRepo.UpdateProduct(ctx, product)
 	}

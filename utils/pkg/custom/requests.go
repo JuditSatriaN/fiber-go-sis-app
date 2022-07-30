@@ -21,7 +21,7 @@ func BuildPageAndLimit(ctx *fiber.Ctx) (int, int, error) {
 	return page, limit, nil
 }
 
-func BuildOffsetAndLimitES(page int, limit int) (int, int) {
+func BuildOffset(page int, limit int) int {
 	offset := (page - 1) * limit
-	return limit, offset
+	return offset
 }

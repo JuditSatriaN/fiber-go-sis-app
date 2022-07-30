@@ -1,38 +1,40 @@
-package product
+package products
 
 import (
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 
-	productEntity "github.com/fiber-go-sis-app/internal/entity/product"
+	productEntity "github.com/fiber-go-sis-app/internal/entity/products"
 	customPkg "github.com/fiber-go-sis-app/utils/pkg/custom"
 
 	productUC "github.com/fiber-go-sis-app/internal/usecase/services/products"
 )
 
-//// GetDTProductHandler : Get List Of Product for Datatable
-//func GetDTProductHandler(ctx *fiber.Ctx) error {
-//	page, limit, err := customPkg.BuildPageAndLimit(ctx)
-//	if err != nil {
-//		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	search := ctx.Query("search", "")
-//
-//	result, err := productUC.GetDTAllProduct(ctx, page, limit, search)
-//	if err != nil {
-//		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-//			"message": err.Error(),
-//		})
-//	}
-//
-//	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
-//}
+// GetDTProductHandler : Get List Of Product for Datatable
+func GetDTProductHandler(ctx *fiber.Ctx) error {
+	page, limit, err := customPkg.BuildPageAndLimit(ctx)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
 
-// GetProductByIDOrBarcode : Get product data from ID or barcode
-func GetProductByIDOrBarcode(ctx *fiber.Ctx) error {
+	search := ctx.Query("search", "")
+	fmt.Println("SEARCH : ", search, page, limit)
+
+	result, err := productUC.GetDTAllProduct(ctx, page, limit, search)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
+}
+
+// GetProductByPLUOrBarcode : Get product data from PLU or barcode
+func GetProductByPLUOrBarcode(ctx *fiber.Ctx) error {
 	search := ctx.Query("search", "")
 	if search == "" {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -40,7 +42,7 @@ func GetProductByIDOrBarcode(ctx *fiber.Ctx) error {
 		})
 	}
 
-	result, err := productUC.GetProductByIDOrBarcode(ctx, search)
+	result, err := productUC.GetProductByPLUOrBarcode(ctx, search)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
@@ -113,13 +115,13 @@ func DeleteProductHandler(ctx *fiber.Ctx) error {
 		})
 	}
 
-	if err := productUC.DeleteProduct(ctx, product.ProductID); err != nil {
+	if err := productUC.DeleteProduct(ctx, product.PLU); err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	return ctx.SendString("Data Product berhasil dihapus")
+	return ctx.SendString("Data product berhasil dihapus")
 }
 
 func UpsertProductHandler(ctx *fiber.Ctx) error {
