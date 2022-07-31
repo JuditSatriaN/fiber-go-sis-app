@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	goccyJson "github.com/goccy/go-json"
+	"github.com/fiber-go-sis-app/internal/app/constant"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
@@ -15,31 +15,27 @@ import (
 	"github.com/gofiber/template/html"
 	"github.com/joho/godotenv"
 
-	constantsEntity "github.com/fiber-go-sis-app/internal/entity/constants"
-
-	serviceRoutes "github.com/fiber-go-sis-app/routes/services"
-	webRoutes "github.com/fiber-go-sis-app/routes/web"
-
-	customPkg "github.com/fiber-go-sis-app/utils/pkg/custom"
-	postgresPkg "github.com/fiber-go-sis-app/utils/pkg/databases/postgres"
-
-	jwtMiddleware "github.com/fiber-go-sis-app/utils/pkg/middleware/jwt"
+	apiRouter "github.com/fiber-go-sis-app/api/router"
+	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
+	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/databases/postgres"
+	webRouter "github.com/fiber-go-sis-app/web/app/router"
+	goccyJson "github.com/goccy/go-json"
 )
 
 // Embed a template directory
-//go:embed templates/*
+//go:embed web/template/*
 var embedDirTemplate embed.FS
 
 // Embed a static directory
-//go:embed static/*
+//go:embed web/static/*
 var embedDirStatic embed.FS
 
-// Embed a schemes' directory
-//go:embed utils/schemes/postgres/*
+// Embed a schema directory
+//go:embed schema/postgres/*
 var embedSchemaFiles embed.FS
 
 // Embed a private pem files
-//go:embed utils/schemes/pem/private.pem
+//go:embed schema/pem/private.pem
 var embedPrivatePEMFile []byte
 
 func main() {
@@ -47,10 +43,10 @@ func main() {
 	app := fiber.New(fiber.Config{
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 3 * time.Second,
+		AppName:      constant.AppName,
 		JSONEncoder:  goccyJson.Marshal,
 		JSONDecoder:  goccyJson.Unmarshal,
-		AppName:      constantsEntity.AppName,
-		ErrorHandler: webRoutes.CustomErrorHandler,
+		ErrorHandler: customPkg.CustomErrorHandler,
 		Views:        html.NewFileSystem(http.FS(embedDirTemplate), ".html"),
 	})
 
@@ -63,15 +59,15 @@ func main() {
 	app.Use(logger.New(), recover.New())
 
 	// Setting static files in .static folder
-	app.Use(constantsEntity.StaticUrl, filesystem.New(filesystem.Config{
+	app.Use(constant.StaticUrl, filesystem.New(filesystem.Config{
 		Root:       http.FS(embedDirStatic),
-		PathPrefix: "static",
+		PathPrefix: "web/static",
 		Browse:     true,
 	}))
 
 	// Setting key token to encrypt cookie
 	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key: constantsEntity.CookiesKeyToken,
+		Key: constant.CookiesKeyToken,
 	}))
 
 	// Setting JWT RS256
@@ -84,27 +80,16 @@ func main() {
 		panic(err)
 	}
 
-	// Setup schema if table postgres / index elasticsearch not exists
+	// Setup schema if table postgres not exists
 	if err := customPkg.SetupPostgresTable(embedSchemaFiles); err != nil {
 		panic(err)
 	}
 
-	// Web handler login
-	webRoutes.BuildLoginRoutes(app)
-	webRoutes.BuildError404NotFound(app)
+	// Web handler
+	webRouter.BuildWebRouter(app)
 
-	// Web handler - SIS
-	sisGroup := app.Group("/sis")
-	sisGroup.Use(jwtMiddleware.AccessTokenMiddleware(constantsEntity.WebSource))
-	sisGroup.Use(jwtMiddleware.RefreshTokenMiddleware(constantsEntity.WebSource))
-	webRoutes.BuildSISRoutes(sisGroup)
-
-	// Service Group
-	svcGroup := app.Group("/svc")
-	serviceRoutes.BuildUserRoutes(svcGroup)
-	serviceRoutes.BuildLoginRoutes(svcGroup)
-	serviceRoutes.BuildMemberRoutes(svcGroup)
-	serviceRoutes.BuildProductRoutes(svcGroup)
+	// API Handler
+	apiRouter.BuildAPIRouter(app)
 
 	if err := app.Listen(":8080"); err != nil {
 		panic(err)

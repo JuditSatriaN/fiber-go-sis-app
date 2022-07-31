@@ -1,7 +1,7 @@
 .PHONY: docker-up
 docker-up:
-	docker-compose --env-file dbcredentials.env up -d
-	./utils/schemes/setup.sh
+	docker-compose --env-file ./scripts/dbcredentials.env up -d
+	./scripts/setup.sh
 
 
 .PHONY: run

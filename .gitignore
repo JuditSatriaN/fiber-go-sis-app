@@ -17,5 +17,5 @@
 .idea/*
 .docker/*
 
-utils/schemes/pem/*
+schema/pem/*
 .DS_Store
