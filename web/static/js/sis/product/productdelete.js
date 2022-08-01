@@ -1,17 +1,16 @@
 async function sendDeleteProductRequest(row) {
     let baseURL = $('#baseURL').text();
-    const response = await axios({
+    return await axios({
         data: row,
         method: 'POST',
         url: baseURL + "api/product/delete",
-    });
-    return response
+    })
 }
 
 function deleteProduct(row) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendDeleteProductRequest(row).then(function (results) {
+    sendDeleteProductRequest(row).then(function () {
         alertify.success("Data barang berhasil dihapus");
         $('#table').bootstrapTable('refresh');
     }).catch(function (err) {

@@ -1,17 +1,17 @@
-async function sendDeleteUserRequest(row) {
+async function sendDeleteUnitRequest(row) {
     let baseURL = $('#baseURL').text();
     return await axios({
         data: row,
         method: 'POST',
-        url: baseURL + "api/user/delete",
+        url: baseURL + "api/unit/delete",
     })
 }
 
-function deleteUser(row) {
+function deleteUnit(row) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendDeleteUserRequest(row).then(function () {
-        alertify.success("Data user berhasil dihapus");
+    sendDeleteUnitRequest(row).then(function () {
+        alertify.success("Data unit berhasil dihapus");
         $('#table').bootstrapTable('refresh');
     }).catch(function (err) {
         buildErrorPopup(err.response.data.message);

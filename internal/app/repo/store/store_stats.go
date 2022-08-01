@@ -2,7 +2,6 @@ package store
 
 import (
 	"database/sql"
-
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
@@ -61,6 +60,7 @@ const updateTotalProduct = `
 `
 
 func UpdateTotalProduct(tx *sqlx.Tx, store model.StoreStats) error {
-	_, err := tx.NamedQuery(updateTotalProduct, store)
+	rows, err := tx.NamedQuery(updateTotalProduct, store)
+	defer rows.Close()
 	return err
 }

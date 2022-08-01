@@ -35,12 +35,11 @@ function getParamValue() {
 
 async function sendSaveUserRequest(data) {
     let baseURL = $('#baseURL').text();
-    const response = await axios({
+    return await axios({
         data: data,
         method: 'POST',
         url: baseURL + "api/user/upsert",
-    });
-    return response
+    })
 }
 
 function saveUser(data) {

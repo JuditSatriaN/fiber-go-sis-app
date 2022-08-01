@@ -11,7 +11,8 @@ function qtyFormatter(value, row, index) {
           <span class="input-group-btn">
               <button type="button" class="btn btn-default btn-qty-number" 
                       data-type="minus" data-field="${text_field_id}">
-                  <span class="glyphicon glyphicon-minus"></span>
+<!--                  <span class="glyphicon glyphicon-minus"></span>-->
+                    <span class="fa-solid fa-circle-minus"></span>
               </button>
           </span>
           <input type="text" name="${text_field_id}" data-index="${index}"

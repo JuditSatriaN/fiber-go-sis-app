@@ -1,8 +1,6 @@
 $(function () {
     initTable();
-    $("#barcode").numeric({decimal: false, negative: false});
 })
-
 
 function actionFormatter() {
     return [
@@ -13,11 +11,10 @@ function actionFormatter() {
 
 window.eventActions = {
     'click .edit': function (e, value, row, index) {
-        editProduct(row);
-    },
-    'click .remove': function (e, value, row, index) {
+        editUnit(row);
+    }, 'click .remove': function (e, value, row, index) {
         buildDeleteDataPopup("Apakah anda yakin ingin menghapus data ini?", function () {
-            deleteProduct(row);
+            deleteUnit(row);
         });
     }
 }
@@ -29,39 +26,21 @@ function initTable() {
             [
                 {
                     width: 150,
-                    title: 'PLU',
-                    field: 'plu',
+                    field: 'id',
+                    title: 'ID',
                     align: 'left',
                     widthUnit: "px",
                     valign: 'middle',
                 },
                 {
                     width: 350,
+                    title: 'Nama',
                     field: 'name',
                     align: 'left',
                     widthUnit: "px",
                     valign: 'middle',
-                    title: 'Nama Barang',
                 },
                 {
-                    width: 250,
-                    align: 'left',
-                    widthUnit: "px",
-                    title: 'Barcode',
-                    field: 'barcode',
-                    valign: 'middle',
-                },
-                {
-                    width: 100,
-                    title: 'PPN',
-                    field: 'ppn',
-                    widthUnit: "px",
-                    align: 'center',
-                    valign: 'middle',
-                    formatter: checkboxFormatter
-                },
-                {
-                    width: 200,
                     title: 'Action',
                     align: 'center',
                     clickToSelect: false,
@@ -73,30 +52,16 @@ function initTable() {
     });
 }
 
-async function sendGetProductRequest(params) {
-    let page = 1;
-    let req = params.data;
+async function sendGetUnitRequest() {
     let baseURL = $('#baseURL').text();
-    if (params.data["offset"] !== 0) {
-        page = (params.data["offset"] / params.data["limit"]) + 1
-    }
-
-    const response = await axios({
-        method: 'GET',
-        url: baseURL + "api/dt_products",
-        params: {
-            "page": page,
-            "limit": req["limit"],
-            "search": req["search"],
-        },
-    });
+    const response = await axios.get(baseURL + "api/dt_units");
     return response.data
 }
 
 function ajaxRequest(params) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendGetProductRequest(params).then(function (results) {
+    sendGetUnitRequest().then(function (results) {
         params.success(results);
     }).catch(function (err) {
         params.error(err);
@@ -107,12 +72,6 @@ function ajaxRequest(params) {
 }
 
 function clearFormInput() {
-    $("#modalUpsert #plu").val("");
+    $("#modalUpsert #id").val("");
     $("#modalUpsert #name").val("");
-    $("#modalUpsert #barcode").val("0");
-    $("#modalUpsert #stock").val("0");
-    $("#modalUpsert #ppn").val("Ya");
-    $("#modalUpsert #price").val("0");
-    $("#modalUpsert #member_price").val("0");
-    $("#modalUpsert #discount").val("0");
 }

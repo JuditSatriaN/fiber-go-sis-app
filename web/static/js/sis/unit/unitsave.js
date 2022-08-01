@@ -1,4 +1,4 @@
-$("#upsertMember").on("click", function (event) {
+$("#upsertUnit").on("click", function (event) {
     event.preventDefault();
 
     let param = getParamValue();
@@ -7,16 +7,15 @@ $("#upsertMember").on("click", function (event) {
         return
     }
 
-    saveMember(param.data);
+    saveUnit(param.data);
 });
 
 function getParamValue() {
     let id = parseInt($("#modalUpsert #id").val().trim());
     let name = $("#modalUpsert #name").val().trim();
-    let phone = $("#modalUpsert #phone").val().trim();
 
     if (name === "") {
-        return {"data": null, "err": "Nama member tidak boleh kosong !"}
+        return {"data": null, "err": "Nama unit tidak boleh kosong !"}
     }
 
     return {
@@ -24,28 +23,27 @@ function getParamValue() {
         "data": {
             "id": id,
             "name": name,
-            "phone": phone,
         }
     }
 
 }
 
-async function sendSaveMemberRequest(data) {
+async function sendSaveUnitRequest(data) {
     let baseURL = $('#baseURL').text();
     return await axios({
         data: data,
         method: 'POST',
-        url: baseURL + "api/member/upsert",
+        url: baseURL + "api/unit/upsert",
     })
 }
 
-function saveMember(data) {
+function saveUnit(data) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendSaveMemberRequest(data).then(function () {
+    sendSaveUnitRequest(data).then(function () {
         clearFormInput();
         $("#modalUpsert").modal('toggle');
-        alertify.success("Data member berhasil disimpan");
+        alertify.success("Data unit berhasil disimpan");
         $('#table').bootstrapTable('refresh');
     }).catch(function (err) {
         buildErrorPopup(err.response.data.message);

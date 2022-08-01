@@ -1,6 +1,7 @@
 package product
 
 import (
+	"fmt"
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 
@@ -27,4 +28,25 @@ func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (mode
 		Total: totalProduct,
 		Data:  inventories,
 	}, nil
+}
+
+func GetInventoryByID(ctx *fiber.Ctx, ID int) (model.Inventory, error) {
+	inventory, found, err := inventoryRepo.GetInventoryByID(ctx, ID)
+	if err != nil {
+		return model.Inventory{}, err
+	}
+
+	if !found {
+		return model.Inventory{}, fmt.Errorf("inventory dengan id : %d tidak ditemukan", ID)
+	}
+
+	return inventory, nil
+}
+
+func UpdateStockInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
+	if _, err := GetInventoryByID(ctx, inventory.ID); err != nil {
+		return err
+	}
+
+	return inventoryRepo.UpdateStockInventory(ctx, inventory)
 }

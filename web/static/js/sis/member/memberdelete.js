@@ -1,18 +1,16 @@
 async function sendDeleteMemberRequest(row) {
     let baseURL = $('#baseURL').text();
-    const response = await axios({
+    return await axios({
         data: row,
         method: 'POST',
         url: baseURL + "api/member/delete",
-    });
-    return response
+    })
 }
 
 function deleteMember(row) {
-    let baseURL = $('#baseURL').text();
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendDeleteMemberRequest(row).then(function (results) {
+    sendDeleteMemberRequest(row).then(function () {
         alertify.success("Data member berhasil dihapus");
         $('#table').bootstrapTable('refresh');
     }).catch(function (err) {

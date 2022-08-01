@@ -25,7 +25,7 @@ func GetMemberByID(ctx *fiber.Ctx, ID int) (model.Member, error) {
 	}
 
 	if !found {
-		return model.Member{}, fmt.Errorf("member dengan nama : %s tidak ditemukan", member.Name)
+		return model.Member{}, fmt.Errorf("member dengan id : %d tidak ditemukan", ID)
 	}
 
 	return member, nil

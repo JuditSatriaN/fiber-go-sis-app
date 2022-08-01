@@ -81,7 +81,8 @@ const insertProduct = `
 `
 
 func InsertProduct(tx *sqlx.Tx, product model.Product) error {
-	_, err := tx.NamedQuery(insertProduct, product)
+	rows, err := tx.NamedQuery(insertProduct, product)
+	defer rows.Close()
 	return err
 }
 

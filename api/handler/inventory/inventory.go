@@ -1,6 +1,7 @@
 package inventory
 
 import (
+	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 
 	inventoryUC "github.com/fiber-go-sis-app/internal/app/usecase/inventory"
@@ -26,4 +27,20 @@ func GetDTInventoryHandler(ctx *fiber.Ctx) error {
 	}
 
 	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
+}
+
+func UpdateStockInventoryHandler(ctx *fiber.Ctx) error {
+	var inventory model.Inventory
+
+	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
+		return err
+	}
+
+	if err := inventoryUC.UpdateStockInventory(ctx, inventory); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.SendString("Data update stock berhasil diubah")
 }

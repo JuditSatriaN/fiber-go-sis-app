@@ -1,8 +1,10 @@
 package model
 
 type Inventory struct {
-	PLU         string  `json:"plu" db:"plu" validate:"required,max=20"`
+	ID          int     `json:"id" db:"id"`
+	PLU         string  `json:"plu" db:"plu" validate:"max=20"`
 	Name        string  `json:"name" db:"name" validate:"max=255"`
+	UnitName    string  `json:"unit_name" db:"unit_name" validate:"max=255"`
 	Barcode     string  `json:"barcode" db:"barcode"`
 	Ppn         bool    `json:"ppn" db:"ppn"`
 	Multiplier  int64   `json:"multiplier" db:"multiplier"`
