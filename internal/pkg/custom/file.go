@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+// ReadFileNameWithoutExtension function custom package to read file name without extension
 func ReadFileNameWithoutExtension(fileName string) string {
 	return strings.TrimSuffix(fileName, filepath.Ext(fileName))
 }
 
+// GetAllFilenames function to get all file name
 func GetAllFilenames(fs *embed.FS, dir string) (out []string, err error) {
 	if len(dir) == 0 {
 		dir = "."
@@ -41,6 +43,7 @@ func GetAllFilenames(fs *embed.FS, dir string) (out []string, err error) {
 	return
 }
 
+// GetAllContentFiles function to get all content in file
 func GetAllContentFiles(fs *embed.FS, dir string) (out []string, err error) {
 	if len(dir) == 0 {
 		dir = "."

@@ -29,11 +29,98 @@ func GetDTInventoryHandler(ctx *fiber.Ctx) error {
 	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
 }
 
+// SearchInventoryHandler : Search all inventory by param
+func SearchInventoryHandler(ctx *fiber.Ctx) error {
+	search := ctx.Query("search", "")
+
+	result, err := inventoryUC.SearchInventoryByParam(ctx, search)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return customPkg.BuildJSONRes(ctx, result)
+}
+
+func InsertInventoryHandler(ctx *fiber.Ctx) error {
+	var inventory model.Inventory
+
+	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err := inventoryUC.InsertInventory(ctx, inventory); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.SendString("Data inventory berhasil disimpan")
+}
+
+func UpdateInventoryHandler(ctx *fiber.Ctx) error {
+	var inventory model.Inventory
+
+	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err := inventoryUC.UpdateInventory(ctx, inventory); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.SendString("Data inventory berhasil diubah")
+}
+
+func DeleteInventoryHandler(ctx *fiber.Ctx) error {
+	var inventory model.Inventory
+
+	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err := inventoryUC.DeleteInventory(ctx, inventory.ID); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	return ctx.SendString("Data inventory berhasil dihapus")
+}
+
+func UpsertInventoryHandler(ctx *fiber.Ctx) error {
+	var inventory model.Inventory
+
+	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err := inventoryUC.UpsertInventory(ctx, inventory); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return customPkg.BuildJSONRes(ctx, inventory)
+}
+
 func UpdateStockInventoryHandler(ctx *fiber.Ctx) error {
 	var inventory model.Inventory
 
 	if err := customPkg.ValidateRequest(ctx, &inventory); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := inventoryUC.UpdateStockInventory(ctx, inventory); err != nil {

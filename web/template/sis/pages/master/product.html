@@ -46,15 +46,15 @@
                 <form>
                     <div class="form-group">
                         <label for="plu" class="col-form-label">PLU</label>
-                        <input type="text" class="form-control" id="plu" required>
+                        <input type="text" class="form-control" id="plu" placeholder="Silahkan masukkan plu" required>
                     </div>
                     <div class="form-group">
                         <label for="name" class="col-form-label">Nama Barang</label>
-                        <input type="text" class="form-control" id="name">
+                        <input type="text" class="form-control" id="name" placeholder="Silahkan masukkan nama barang">
                     </div>
                     <div class="form-group">
                         <label for="barcode" class="col-form-label">Barcode</label>
-                        <input type="text" class="form-control" id="barcode" value="0">
+                        <input type="text" class="form-control" id="barcode" value="0" placeholder="Silahkan masukkan barcode barang">
                     </div>
                     <div class="form-group">
                         <label for="ppn" class="col-form-label">Barang Kena PPN</label>
@@ -75,13 +75,9 @@
 <!-- /.container-fluid -->
 {{ template "web/template/sis/sections/footer" . }}
 
-<!--Load custom javascript -->
-<script src="{{ .StaticUrl }}/js/utils/price_formatter.js"></script>
-<script src="{{ .StaticUrl }}/js/utils/checkbox_formatter.js"></script>
-
 <!--Load page level javascript -->
-<script src="{{ .StaticUrl }}/js/sis/product/productget.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/product/productadd.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/product/productsave.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/product/productedit.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/product/productdelete.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/product/productget.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/product/productadd.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/product/productsave.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/product/productedit.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/product/productdelete.js"></script>

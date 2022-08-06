@@ -4,14 +4,16 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	formsEntity "github.com/fiber-go-sis-app/internal/app/constant"
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+
+	formsEntity "github.com/fiber-go-sis-app/internal/app/constant"
 )
 
 var privateKey *rsa.PrivateKey
 
+// GenerateJWT function to generate private key jwt
 func GenerateJWT(embedPrivatePEMFile []byte) error {
 	var err error
 
@@ -20,10 +22,12 @@ func GenerateJWT(embedPrivatePEMFile []byte) error {
 	return err
 }
 
+// GetPrivateKey function to get private key jwt
 func GetPrivateKey() *rsa.PrivateKey {
 	return privateKey
 }
 
+// CreateJWTToken function to create jwt token
 func CreateJWTToken(req formsEntity.JWTRequest) (formsEntity.JWTTokenKey, error) {
 	var (
 		err         error

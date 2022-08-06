@@ -29,6 +29,27 @@ func GetALLDTProductHandler(ctx *fiber.Ctx) error {
 	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
 }
 
+// GetALLProductHandler : Get List Of Product
+func GetALLProductHandler(ctx *fiber.Ctx) error {
+	page, limit, err := customPkg.BuildPageAndLimit(ctx)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	search := ctx.Query("search", "")
+
+	result, err := productUC.GetAllProduct(ctx, page, limit, search)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return customPkg.BuildJSONRes(ctx, result)
+}
+
 // GetProductByPLUOrBarcode : Get product data from PLU or barcode
 func GetProductByPLUOrBarcode(ctx *fiber.Ctx) error {
 	search := ctx.Query("search", "")
@@ -53,7 +74,9 @@ func InsertProductHandler(ctx *fiber.Ctx) error {
 	var product model.Product
 
 	if err := customPkg.ValidateRequest(ctx, &product); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := productUC.InsertProduct(ctx, product); err != nil {
@@ -70,7 +93,9 @@ func UpdateProductHandler(ctx *fiber.Ctx) error {
 	var product model.Product
 
 	if err := customPkg.ValidateRequest(ctx, &product); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := productUC.UpdateProduct(ctx, product); err != nil {
@@ -87,7 +112,9 @@ func DeleteProductHandler(ctx *fiber.Ctx) error {
 	var product model.Product
 
 	if err := customPkg.ValidateRequest(ctx, &product); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := productUC.DeleteProduct(ctx, product.PLU); err != nil {
@@ -104,7 +131,9 @@ func UpsertProductHandler(ctx *fiber.Ctx) error {
 	var product model.Product
 
 	if err := customPkg.ValidateRequest(ctx, &product); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := productUC.UpsertProduct(ctx, product); err != nil {

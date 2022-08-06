@@ -1,8 +1,9 @@
 package constant
 
-// Web Login Constanta
+// Web Home Constanta
 
 const WebLoginURL = BaseURL
+const Web404NotFoundURL = BaseURL + "404_not_found"
 
 // Web SIS Master Side Constanta
 

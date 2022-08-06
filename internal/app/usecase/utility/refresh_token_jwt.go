@@ -3,13 +3,11 @@ package utility
 import (
 	"fmt"
 
+	"github.com/fiber-go-sis-app/internal/app/constant"
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/fiber-go-sis-app/internal/app/constant"
-
-	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
-
 	userRepo "github.com/fiber-go-sis-app/internal/app/repo/user"
+	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
 )
 
 func RefreshTokenJWT(ctx *fiber.Ctx, userID string) error {
@@ -31,15 +29,7 @@ func RefreshTokenJWT(ctx *fiber.Ctx, userID string) error {
 		return err
 	}
 
-	ctx.Cookie(&fiber.Cookie{
-		Name:  constant.JWTAccessCookiesKey,
-		Value: token.AccessToken,
-	})
-
-	ctx.Cookie(&fiber.Cookie{
-		Name:  constant.JWTRefreshCookiesKey,
-		Value: token.RefreshToken,
-	})
+	customPkg.SetLoginCookie(ctx, token.AccessToken, token.RefreshToken)
 
 	return nil
 }

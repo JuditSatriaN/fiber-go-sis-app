@@ -2,9 +2,10 @@ package unit
 
 import (
 	"github.com/fiber-go-sis-app/internal/app/model"
+	"github.com/gofiber/fiber/v2"
+
 	unitUC "github.com/fiber-go-sis-app/internal/app/usecase/unit"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
-	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllUnitHandler(ctx *fiber.Ctx) error {
@@ -33,7 +34,9 @@ func InsertUnitHandler(ctx *fiber.Ctx) error {
 	var unit model.Unit
 
 	if err := customPkg.ValidateRequest(ctx, &unit); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := unitUC.InsertUnit(ctx, unit); err != nil {
@@ -49,7 +52,9 @@ func UpdateUnitHandler(ctx *fiber.Ctx) error {
 	var unit model.Unit
 
 	if err := customPkg.ValidateRequest(ctx, &unit); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := unitUC.UpdateUnit(ctx, unit); err != nil {
@@ -65,7 +70,9 @@ func DeleteUnitHandler(ctx *fiber.Ctx) error {
 	var unit model.Unit
 
 	if err := customPkg.ValidateRequest(ctx, &unit); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := unitUC.DeleteUnit(ctx, unit.ID); err != nil {
@@ -80,7 +87,9 @@ func UpsertUnitHandler(ctx *fiber.Ctx) error {
 	var unit model.Unit
 
 	if err := customPkg.ValidateRequest(ctx, &unit); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := unitUC.UpsertUnit(ctx, unit); err != nil {

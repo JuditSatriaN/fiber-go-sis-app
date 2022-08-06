@@ -8,6 +8,7 @@ import (
 
 	"github.com/fiber-go-sis-app/internal/app/constant"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
 	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -17,7 +18,7 @@ import (
 
 	apiRouter "github.com/fiber-go-sis-app/api/router"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
-	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/databases/postgres"
+	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 	webRouter "github.com/fiber-go-sis-app/web/app/router"
 	goccyJson "github.com/goccy/go-json"
 )
@@ -46,8 +47,8 @@ func main() {
 		AppName:      constant.AppName,
 		JSONEncoder:  goccyJson.Marshal,
 		JSONDecoder:  goccyJson.Unmarshal,
-		ErrorHandler: customPkg.CustomErrorHandler,
-		Views:        html.NewFileSystem(http.FS(embedDirTemplate), ".html"),
+		ErrorHandler: customPkg.ErrorHandler,
+		Views:        html.NewFileSystem(http.FS(embedDirTemplate), constant.HtmlExtension),
 	})
 
 	// Load Environment
@@ -58,11 +59,17 @@ func main() {
 	// Setting basic configuration
 	app.Use(logger.New(), recover.New())
 
+	// Setting CORS
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "*",
+		AllowHeaders: "*",
+	}))
+
 	// Setting static files in .static folder
 	app.Use(constant.StaticUrl, filesystem.New(filesystem.Config{
-		Root:       http.FS(embedDirStatic),
-		PathPrefix: "web/static",
 		Browse:     true,
+		Root:       http.FS(embedDirStatic),
+		PathPrefix: constant.StaticPathPrefix,
 	}))
 
 	// Setting key token to encrypt cookie

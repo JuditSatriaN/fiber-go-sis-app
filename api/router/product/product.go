@@ -9,6 +9,7 @@ import (
 // BuildProductAPI : API to handle product
 func BuildProductAPI(api fiber.Router) {
 	api.Get("/dt_products", productHandler.GetALLDTProductHandler)
+	api.Get("/products", productHandler.GetALLProductHandler)
 	api.Get("/product", productHandler.GetProductByPLUOrBarcode)
 	api.Post("/product/insert", productHandler.InsertProductHandler)
 	api.Post("/product/update", productHandler.UpdateProductHandler)

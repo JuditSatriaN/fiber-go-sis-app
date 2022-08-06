@@ -1,7 +1,10 @@
-package product
+package inventory
 
 import (
 	"fmt"
+	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
+	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/databases/postgres"
+
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 
@@ -10,7 +13,7 @@ import (
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
 )
 
-// GetDTAllInventory : Get List Of Inventory for Datatable
+// GetDTAllInventory : Get List Of Inventory For Datatable
 func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (model.ListInventoryDataResponse, error) {
 	offset := customPkg.BuildOffset(page, limit)
 
@@ -19,17 +22,37 @@ func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (mode
 		return model.ListInventoryDataResponse{}, err
 	}
 
-	totalProduct, err := storeRepo.GetTotalProduct(ctx, model.DefaultStoreID)
+	totalInventory, err := storeRepo.GetTotalInventory(ctx, model.DefaultStoreID)
 	if err != nil {
 		return model.ListInventoryDataResponse{}, err
 	}
 
 	return model.ListInventoryDataResponse{
-		Total: totalProduct,
+		Total: totalInventory,
 		Data:  inventories,
 	}, nil
 }
 
+// SearchInventoryByParam : Search Inventory By Parameter Request
+func SearchInventoryByParam(ctx *fiber.Ctx, search string) ([]model.Inventory, error) {
+	product, found, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
+	if err != nil {
+		return []model.Inventory{}, err
+	}
+
+	if !found {
+		return []model.Inventory{}, fmt.Errorf("product tidak ditemukan")
+	}
+
+	results, err := inventoryRepo.GetInventoryByPLU(ctx, product.PLU)
+	if err != nil {
+		return []model.Inventory{}, err
+	}
+
+	return results, nil
+}
+
+// GetInventoryByID : Get Inventory By ID
 func GetInventoryByID(ctx *fiber.Ctx, ID int) (model.Inventory, error) {
 	inventory, found, err := inventoryRepo.GetInventoryByID(ctx, ID)
 	if err != nil {
@@ -41,6 +64,87 @@ func GetInventoryByID(ctx *fiber.Ctx, ID int) (model.Inventory, error) {
 	}
 
 	return inventory, nil
+}
+
+// InsertInventory : Insert Inventory
+func InsertInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
+	tx, err := postgresPkg.BeginTxx(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := inventoryRepo.InsertInventory(tx, inventory); err != nil {
+		return err
+	}
+
+	if err := storeRepo.UpdateTotalInventory(tx, model.StoreStats{
+		StoreID:        model.DefaultStoreID,
+		TotalInventory: 1,
+	}); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpdateInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
+	if _, err := GetInventoryByID(ctx, inventory.ID); err != nil {
+		return err
+	}
+	return inventoryRepo.UpdateInventory(ctx, inventory)
+}
+
+func DeleteInventory(ctx *fiber.Ctx, ID int) error {
+	if _, err := GetInventoryByID(ctx, ID); err != nil {
+		return err
+	}
+
+	tx, err := postgresPkg.BeginTxx(ctx)
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	if err := inventoryRepo.DeleteInventory(tx, ID); err != nil {
+		return err
+	}
+
+	if err := storeRepo.UpdateTotalInventory(tx, model.StoreStats{
+		StoreID:        model.DefaultStoreID,
+		TotalInventory: -1,
+	}); err != nil {
+		return err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func UpsertInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
+	_, found, err := inventoryRepo.GetInventoryByID(ctx, inventory.ID)
+	if err != nil {
+		return err
+	}
+
+	if !found || inventory.ID == 0 {
+		if err := InsertInventory(ctx, inventory); err != nil {
+			return err
+		}
+	} else {
+		if err := UpdateInventory(ctx, inventory); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func UpdateStockInventory(ctx *fiber.Ctx, inventory model.Inventory) error {

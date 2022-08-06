@@ -61,8 +61,8 @@ func InsertMember(ctx *fiber.Ctx, member model.Member) error {
 }
 
 const updateMember = `
-	UPDATE members SET
-		name = :name,
+	UPDATE members 
+	SET name = :name,
 	    phone = :phone,
 		update_time = NOW()
 	WHERE id = :id

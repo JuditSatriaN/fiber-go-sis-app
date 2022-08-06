@@ -1,8 +1,13 @@
 package custom
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"fmt"
+	"github.com/fiber-go-sis-app/internal/app/constant"
+	"github.com/gofiber/fiber/v2"
+)
 
-var CustomErrorHandler = func(c *fiber.Ctx, err error) error {
+//ErrorHandler function custom package to error handler
+var ErrorHandler = func(ctx *fiber.Ctx, err error) error {
 	// Default 500 status-code
 	code := fiber.StatusInternalServerError
 
@@ -12,12 +17,16 @@ var CustomErrorHandler = func(c *fiber.Ctx, err error) error {
 	}
 
 	// Set Content-Type: text/plain; charset=utf-8
-	c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
+	ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
 
 	if code == fiber.StatusNotFound {
-		return c.Status(code).Redirect("/404_not_found")
+		return ctx.Status(code).Redirect(constant.Web404NotFoundURL)
 	}
 
 	// Return status-code with error message
-	return c.Status(code).SendString(err.Error())
+	return ctx.Status(code).SendString(err.Error())
+}
+
+func ConvertErrorStartswith(field string, param string) error {
+	return fmt.Errorf("Field %s harus dimulai dengan kata %s ", field, param)
 }

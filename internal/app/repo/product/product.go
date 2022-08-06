@@ -13,7 +13,7 @@ import (
 const queryGetALlProducts = `
 	SELECT plu, name, barcode, ppn
 	FROM products
-	WHERE $1 = '' OR value_text_search @@ to_tsquery($1)
+	WHERE $1 = '' OR value_text_search @@ plainto_tsquery($1)
 	LIMIT $2
 	OFFSET $3
 `
@@ -82,6 +82,10 @@ const insertProduct = `
 
 func InsertProduct(tx *sqlx.Tx, product model.Product) error {
 	rows, err := tx.NamedQuery(insertProduct, product)
+	if err != nil {
+		return err
+	}
+
 	defer rows.Close()
 	return err
 }
@@ -97,7 +101,6 @@ const updateProduct = `
 
 func UpdateProduct(ctx *fiber.Ctx, product model.Product) error {
 	db := postgresPkg.GetPgConn()
-
 	_, err := db.NamedQueryContext(ctx.Context(), updateProduct, product)
 	return err
 }

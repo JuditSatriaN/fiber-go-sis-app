@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS products
     name              VARCHAR(255) NOT NULL,
     barcode           VARCHAR(30)  NOT NULL DEFAULT '0',
     ppn               BOOLEAN      NOT NULL DEFAULT FALSE,
-    create_time       timestamp    NOT NULL DEFAULT now(),
-    update_time       timestamp,
-    value_text_search tsvector
+    create_time       TIMESTAMP    NOT NULL DEFAULT NOW(),
+    update_time       TIMESTAMP,
+    value_text_search TSVECTOR
 );
 
 

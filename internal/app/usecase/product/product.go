@@ -34,6 +34,18 @@ func GetAllDTProduct(ctx *fiber.Ctx, page int, limit int, search string) (model.
 	}, nil
 }
 
+// GetAllProduct : Get List Of Product
+func GetAllProduct(ctx *fiber.Ctx, page int, limit int, search string) ([]model.Product, error) {
+	offset := customPkg.BuildOffset(page, limit)
+
+	products, err := productRepo.GetALlProducts(ctx, search, limit, offset)
+	if err != nil {
+		return []model.Product{}, err
+	}
+
+	return products, nil
+}
+
 func GetProductByPLU(ctx *fiber.Ctx, PLU string) (model.Product, error) {
 	product, found, err := productRepo.GetProductByPLU(ctx, PLU)
 	if err != nil {

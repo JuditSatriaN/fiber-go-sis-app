@@ -2,6 +2,7 @@ package store
 
 import (
 	"database/sql"
+
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
@@ -51,6 +52,27 @@ func GetTotalProduct(ctx *fiber.Ctx, storeID string) (int64, error) {
 	return totalProduct, nil
 }
 
+const queryGetTotalInventory = `
+	SELECT total_inventory
+	FROM store_stats
+	WHERE store_id = $1
+`
+
+func GetTotalInventory(ctx *fiber.Ctx, storeID string) (int64, error) {
+	var totalInventory int64
+	db := postgresPkg.GetPgConn()
+
+	if err := db.GetContext(ctx.Context(), &totalInventory, queryGetTotalInventory, storeID); err != nil {
+		if err == sql.ErrNoRows {
+			return totalInventory, nil
+		}
+
+		return totalInventory, err
+	}
+
+	return totalInventory, nil
+}
+
 const updateTotalProduct = `
 	UPDATE store_stats 
 	SET
@@ -61,6 +83,28 @@ const updateTotalProduct = `
 
 func UpdateTotalProduct(tx *sqlx.Tx, store model.StoreStats) error {
 	rows, err := tx.NamedQuery(updateTotalProduct, store)
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+	return err
+}
+
+const updateTotalInventory = `
+	UPDATE store_stats 
+	SET
+		total_inventory = total_inventory + :total_inventory,
+		update_time = NOW()
+	WHERE store_id = :store_id
+`
+
+func UpdateTotalInventory(tx *sqlx.Tx, store model.StoreStats) error {
+	rows, err := tx.NamedQuery(updateTotalInventory, store)
+	if err != nil {
+		return err
+	}
+
 	defer rows.Close()
 	return err
 }

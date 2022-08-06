@@ -1,28 +1,29 @@
 package jwt
 
 import (
-	constant2 "github.com/fiber-go-sis-app/internal/app/constant"
+	"github.com/fiber-go-sis-app/internal/app/constant"
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
+
 	formsUC "github.com/fiber-go-sis-app/internal/app/usecase/utility"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
-	"github.com/gofiber/fiber/v2"
 	jwtWare "github.com/gofiber/jwt/v3"
-	"github.com/golang-jwt/jwt/v4"
 )
 
 // RefreshTokenMiddleware function to handle refresh token middleware in web
 func RefreshTokenMiddleware(sourceName string) fiber.Handler {
-	// define error handler if source name is web will be return on login if service will be return json
+	// Define error handler if source name is web will be return on login if service will be return json
 	errHandler := jwtSvcRefreshTokenError
-	if sourceName == constant2.WebSource {
+	if sourceName == constant.WebSource {
 		errHandler = jwtWebRefreshTokenError
 	}
 
 	return jwtWare.New(jwtWare.Config{
 		ErrorHandler:   errHandler,
+		SigningMethod:  constant.JWTMethod,
 		SuccessHandler: refreshTokenSuccess,
-		SigningMethod:  constant2.JWTMethod,
 		SigningKey:     customPkg.GetPrivateKey().Public(),
-		TokenLookup:    "header:Authorization,cookie:" + constant2.JWTRefreshCookiesKey,
+		TokenLookup:    "header:Authorization,cookie:" + constant.JWTRefreshCookiesKey,
 	})
 }
 
@@ -42,14 +43,15 @@ func refreshTokenSuccess(ctx *fiber.Ctx) error {
 }
 
 func jwtSvcRefreshTokenError(ctx *fiber.Ctx, err error) error {
-	if err.Error() == constant2.ErrMissingOrMalformedJWT {
+	if err.Error() == constant.ErrMissingOrMalformedJWT {
 		return ctx.Status(fiber.StatusBadRequest).
-			JSON(fiber.Map{"status": "error", "message": constant2.ErrMissingOrMalformedJWT, "data": nil})
+			JSON(fiber.Map{"status": "error", "message": constant.ErrMissingOrMalformedJWT, "data": nil})
 	}
 	return ctx.Status(fiber.StatusUnauthorized).
-		JSON(fiber.Map{"status": "error", "message": constant2.ErrInvalidORExpiredJWT, "data": nil})
+		JSON(fiber.Map{"status": "error", "message": constant.ErrInvalidORExpiredJWT, "data": nil})
 }
 
 func jwtWebRefreshTokenError(ctx *fiber.Ctx, err error) error {
-	return ctx.Redirect(constant2.BaseURL)
+	customPkg.ClearLoginCookie(ctx)
+	return ctx.Redirect(constant.BaseURL)
 }

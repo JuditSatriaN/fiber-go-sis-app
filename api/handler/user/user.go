@@ -37,7 +37,9 @@ func InsertUserHandler(ctx *fiber.Ctx) error {
 	var user model.User
 
 	if err := customPkg.ValidateRequest(ctx, &user); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := userUC.InsertUser(ctx, user); err != nil {
@@ -54,7 +56,9 @@ func UpdateUserHandler(ctx *fiber.Ctx) error {
 	var user model.User
 
 	if err := customPkg.ValidateRequest(ctx, &user); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := userUC.UpdateUser(ctx, user); err != nil {
@@ -71,7 +75,9 @@ func DeleteUserHandler(ctx *fiber.Ctx) error {
 	var user model.User
 
 	if err := customPkg.ValidateRequest(ctx, &user); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := userUC.DeleteUser(ctx, user.UserID); err != nil {
@@ -88,7 +94,9 @@ func UpsertUserHandler(ctx *fiber.Ctx) error {
 	var user model.User
 
 	if err := customPkg.ValidateRequest(ctx, &user); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	if err := userUC.UpsertUser(ctx, user); err != nil {

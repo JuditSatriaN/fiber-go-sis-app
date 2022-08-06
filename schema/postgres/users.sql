@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS users
     full_name   VARCHAR(255) NOT NULL DEFAULT '',
     password    VARCHAR(255) NOT NULL DEFAULT '',
     is_admin    bool         NOT NULL DEFAULT false,
-    create_time timestamp    NOT NULL default now(),
-    update_time timestamp
+    create_time TIMESTAMP    NOT NULL DEFAULT NOW(),
+    update_time TIMESTAMP
 );
 
 CREATE INDEX IF NOT EXISTS user_is_admin ON users (user_name, is_admin);

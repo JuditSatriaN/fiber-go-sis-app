@@ -4,6 +4,7 @@ package constant
 
 const StaticUrl = "/static"
 const AppName = "fiber-go-sis-app"
+const StaticPathPrefix = "web/static"
 const CookiesKeyToken = "aplikasitokoonlinesisjuditsatria"
 
 // Base constants

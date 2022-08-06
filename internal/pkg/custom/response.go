@@ -6,11 +6,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// BuildJSONRes global function to build json response
 func BuildJSONRes(ctx *fiber.Ctx, response interface{}) error {
 	ctx.Set("CONTENT-TYPE", "application/json; charset=utf-8")
 	return ctx.JSON(response)
 }
 
+// BuildDatatableRes global function to build datatable response
 func BuildDatatableRes(ctx *fiber.Ctx, total int64, data interface{}) error {
 	ctx.Set("CONTENT-TYPE", "application/json; charset=utf-8")
 	return ctx.JSON(map[string]interface{}{

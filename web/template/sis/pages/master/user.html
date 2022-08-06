@@ -46,19 +46,19 @@
                 <form>
                     <div class="form-group">
                         <label for="user_id" class="col-form-label">User ID</label>
-                        <input type="text" class="form-control" id="user_id" required>
+                        <input type="text" class="form-control" id="user_id" placeholder="Silahkan masukkan user id" required>
                     </div>
                     <div class="form-group">
                         <label for="user_name" class="col-form-label">Username</label>
-                        <input type="text" class="form-control" id="user_name">
+                        <input type="text" class="form-control" id="user_name" placeholder="Silahkan masukkan username">
                     </div>
                     <div class="form-group">
                         <label for="full_name" class="col-form-label">Full Name</label>
-                        <input type="text" class="form-control" id="full_name">
+                        <input type="text" class="form-control" id="full_name" placeholder="Silahkan masukkan nama lengkap">
                     </div>
                     <div class="form-group">
                         <label for="password" class="col-form-label">Password</label>
-                        <input type="password" class="form-control" id="password">
+                        <input type="password" class="form-control" id="password" placeholder="Silahkan masukkan password">
                     </div>
                     <div class="form-group">
                         <label for="is_admin" class="col-form-label">User Admin</label>
@@ -78,8 +78,8 @@
 
 <!-- /.container-fluid -->
 {{ template "web/template/sis/sections/footer" . }}
-<script src="{{ .StaticUrl }}/js/sis/user/userget.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/user/useradd.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/user/usersave.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/user/useredit.js"></script>
-<script src="{{ .StaticUrl }}/js/sis/user/userdelete.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/user/userget.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/user/useradd.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/user/usersave.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/user/useredit.js"></script>
+<script src="{{ .StaticUrl }}/js/sis/master/user/userdelete.js"></script>

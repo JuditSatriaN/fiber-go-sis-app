@@ -12,7 +12,9 @@ func ProcessLoginHandler(ctx *fiber.Ctx) error {
 	var loginRequest model.LoginRequest
 
 	if err := customPkg.ValidateRequest(ctx, &loginRequest); err != nil {
-		return err
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
 	}
 
 	data, err := loginUC.ProcessLoginForm(ctx, loginRequest)
