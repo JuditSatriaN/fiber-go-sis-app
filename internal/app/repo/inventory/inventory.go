@@ -12,7 +12,7 @@ import (
 
 const queryGetALlInventory = `
 	SELECT i.id, p.plu, p.name, u.id AS unit_id, u.name AS unit_name, p.barcode, p.ppn, 
-	       i.multiplier, i.stock, i.price, i.member_price, i.purchase, i.discount
+	       i.multiplier, i.stock, i.price, i.member_price, i.purchase, i.discount, i.discount_percentage
 	FROM inventories i
 	INNER JOIN products p on i.plu = p.plu
 	INNER JOIN units u on i.unit_id = u.id
@@ -53,7 +53,7 @@ func GetInventoryByID(ctx *fiber.Ctx, ID int32) (model.Inventory, bool, error) {
 
 const queryGetInventoryByPLU = `
 	SELECT i.id, p.plu, p.name, u.id AS unit_id, u.name AS unit_name, p.barcode, p.ppn, 
-	       i.multiplier, i.stock, i.price, i.member_price, i.purchase, i.discount
+	       i.multiplier, i.stock, i.price, i.member_price, i.purchase, i.discount, i.discount_percentage
 	FROM inventories i
 	INNER JOIN products p on i.plu = p.plu
 	INNER JOIN units u on i.unit_id = u.id
@@ -71,8 +71,8 @@ func GetInventoryByPLU(ctx *fiber.Ctx, PLU string) ([]model.Inventory, error) {
 }
 
 const queryInsertInventory = `
-	INSERT INTO inventories (plu, unit_id, multiplier, stock, price, member_price, purchase, discount)
-	VALUES (:plu, :unit_id, :multiplier, :stock, :price, :member_price, :purchase, :discount)
+	INSERT INTO inventories (plu, unit_id, multiplier, stock, price, member_price, purchase, discount, discount_percentage)
+	VALUES (:plu, :unit_id, :multiplier, :stock, :price, :member_price, :purchase, :discount, :discount_percentage)
 `
 
 func InsertInventory(tx *sqlx.Tx, inventory model.Inventory) error {
@@ -103,6 +103,7 @@ const queryUpdateInventory = `
 		member_price = :member_price,
 		purchase = :purchase,
 		discount = :discount,
+		discount_percentage = :discount_percentage,
 	    update_time = NOW()
 	WHERE id = :id
 `
