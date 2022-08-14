@@ -117,7 +117,7 @@
                 <!-- Card Body -->
                 <div class="card-body">
                     <div class="chart-pie pt-4 pb-2">
-                        <canvas id="myPieChart"></canvas>
+                        <canvas id="top3ProductSoldToday"></canvas>
                     </div>
                     <div class="mt-4 text-center small">
                         <span class="mr-2"><i class="fas fa-circle text-primary"></i> Beras </span>
@@ -131,3 +131,6 @@
 </div>
 <!-- /.container-fluid -->
 {{ template "web/template/sis/sections/footer" . }}
+<script src="{{ .StaticUrl }}/js/pagelevel/chart-area-demo.js"></script>
+<script src="{{ .StaticUrl }}/js/pagelevel/chart-bar-demo.js"></script>
+<script src="{{ .StaticUrl }}/js/pagelevel/chart-top3productsold.js"></script>
