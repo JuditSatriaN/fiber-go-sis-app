@@ -48,19 +48,18 @@ func GetMemberByID(ctx *fiber.Ctx, ID int) (model.Member, bool, error) {
 	return member, true, nil
 }
 
-const insertMember = `
+const queryInsertMember = `
 	INSERT INTO members (name, phone)
 	VALUES (:name, :phone)
 `
 
 func InsertMember(ctx *fiber.Ctx, member model.Member) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), insertMember, member)
+	_, err := db.NamedQueryContext(ctx.Context(), queryInsertMember, member)
 	return err
 }
 
-const updateMember = `
+const queryUpdateMember = `
 	UPDATE members 
 	SET name = :name,
 	    phone = :phone,
@@ -70,19 +69,17 @@ const updateMember = `
 
 func UpdateMember(ctx *fiber.Ctx, member model.Member) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), updateMember, member)
+	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateMember, member)
 	return err
 }
 
-const deleteMember = `
+const queryDeleteMember = `
 	DELETE FROM members
 	WHERE id = $1
 `
 
 func DeleteMember(ctx *fiber.Ctx, ID int) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.ExecContext(ctx.Context(), deleteMember, ID)
+	_, err := db.ExecContext(ctx.Context(), queryDeleteMember, ID)
 	return err
 }

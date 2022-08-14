@@ -24,7 +24,6 @@ const queryGetALlInventory = `
 func GetALlInventory(ctx *fiber.Ctx, search string, limit int, offset int) ([]model.Inventory, error) {
 	var inventory []model.Inventory
 	db := postgresPkg.GetPgConn()
-
 	if err := db.SelectContext(ctx.Context(), &inventory, queryGetALlInventory, search, limit, offset); err != nil {
 		return inventory, err
 	}
@@ -38,10 +37,9 @@ const queryGetInventoryByID = `
 	WHERE id = $1
 `
 
-func GetInventoryByID(ctx *fiber.Ctx, ID int) (model.Inventory, bool, error) {
+func GetInventoryByID(ctx *fiber.Ctx, ID int32) (model.Inventory, bool, error) {
 	var inventory model.Inventory
 	db := postgresPkg.GetPgConn()
-
 	if err := db.GetContext(ctx.Context(), &inventory, queryGetInventoryByID, ID); err != nil {
 		if err == sql.ErrNoRows {
 			return inventory, false, nil
@@ -65,7 +63,6 @@ const queryGetInventoryByPLU = `
 func GetInventoryByPLU(ctx *fiber.Ctx, PLU string) ([]model.Inventory, error) {
 	var inventories []model.Inventory
 	db := postgresPkg.GetPgConn()
-
 	if err := db.SelectContext(ctx.Context(), &inventories, queryGetInventoryByPLU, PLU); err != nil {
 		return inventories, err
 	}
@@ -73,13 +70,13 @@ func GetInventoryByPLU(ctx *fiber.Ctx, PLU string) ([]model.Inventory, error) {
 	return inventories, nil
 }
 
-const insertInventory = `
+const queryInsertInventory = `
 	INSERT INTO inventories (plu, unit_id, multiplier, stock, price, member_price, purchase, discount)
 	VALUES (:plu, :unit_id, :multiplier, :stock, :price, :member_price, :purchase, :discount)
 `
 
 func InsertInventory(tx *sqlx.Tx, inventory model.Inventory) error {
-	rows, err := tx.NamedQuery(insertInventory, inventory)
+	rows, err := tx.NamedQuery(queryInsertInventory, inventory)
 	if err != nil {
 		return err
 	}
@@ -88,17 +85,17 @@ func InsertInventory(tx *sqlx.Tx, inventory model.Inventory) error {
 	return nil
 }
 
-const deleteInventory = `
+const queryDeleteInventory = `
 	DELETE FROM inventories
 	WHERE id = $1
 `
 
-func DeleteInventory(tx *sqlx.Tx, ID int) error {
-	_, err := tx.Exec(deleteInventory, ID)
+func DeleteInventory(tx *sqlx.Tx, ID int32) error {
+	_, err := tx.Exec(queryDeleteInventory, ID)
 	return err
 }
 
-const updateInventory = `
+const queryUpdateInventory = `
 	UPDATE inventories 
 	SET multiplier = :multiplier,
 		stock = :stock,
@@ -112,12 +109,11 @@ const updateInventory = `
 
 func UpdateInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), updateInventory, inventory)
+	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateInventory, inventory)
 	return err
 }
 
-const updateStockInventory = `
+const queryUpdateStockInventory = `
 	UPDATE inventories 
 	SET stock = :stock,
 	    update_time = NOW()
@@ -126,7 +122,6 @@ const updateStockInventory = `
 
 func UpdateStockInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), updateStockInventory, inventory)
+	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateStockInventory, inventory)
 	return err
 }

@@ -3,12 +3,13 @@ package inventory
 import (
 	"fmt"
 
+	"github.com/fiber-go-sis-app/internal/app/constant"
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 
 	inventoryRepo "github.com/fiber-go-sis-app/internal/app/repo/inventory"
 	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
-	storeRepo "github.com/fiber-go-sis-app/internal/app/repo/store"
+	statRepo "github.com/fiber-go-sis-app/internal/app/repo/stat"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
 	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 )
@@ -22,7 +23,7 @@ func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (mode
 		return model.ListInventoryDataResponse{}, err
 	}
 
-	totalInventory, err := storeRepo.GetTotalInventory(ctx, model.DefaultStoreID)
+	totalInventory, err := statRepo.GetTotalInventory(ctx, constant.DefaultStoreID)
 	if err != nil {
 		return model.ListInventoryDataResponse{}, err
 	}
@@ -53,7 +54,7 @@ func SearchInventoryByParam(ctx *fiber.Ctx, search string) ([]model.Inventory, e
 }
 
 // GetInventoryByID : Get Inventory By ID
-func GetInventoryByID(ctx *fiber.Ctx, ID int) (model.Inventory, error) {
+func GetInventoryByID(ctx *fiber.Ctx, ID int32) (model.Inventory, error) {
 	inventory, found, err := inventoryRepo.GetInventoryByID(ctx, ID)
 	if err != nil {
 		return model.Inventory{}, err
@@ -78,8 +79,8 @@ func InsertInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
 		return err
 	}
 
-	if err := storeRepo.UpdateTotalInventory(tx, model.StoreStats{
-		StoreID:        model.DefaultStoreID,
+	if err := statRepo.UpdateTotalInventory(tx, model.StoreStats{
+		StoreID:        constant.DefaultStoreID,
 		TotalInventory: 1,
 	}); err != nil {
 		return err
@@ -99,7 +100,7 @@ func UpdateInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
 	return inventoryRepo.UpdateInventory(ctx, inventory)
 }
 
-func DeleteInventory(ctx *fiber.Ctx, ID int) error {
+func DeleteInventory(ctx *fiber.Ctx, ID int32) error {
 	if _, err := GetInventoryByID(ctx, ID); err != nil {
 		return err
 	}
@@ -114,8 +115,8 @@ func DeleteInventory(ctx *fiber.Ctx, ID int) error {
 		return err
 	}
 
-	if err := storeRepo.UpdateTotalInventory(tx, model.StoreStats{
-		StoreID:        model.DefaultStoreID,
+	if err := statRepo.UpdateTotalInventory(tx, model.StoreStats{
+		StoreID:        constant.DefaultStoreID,
 		TotalInventory: -1,
 	}); err != nil {
 		return err

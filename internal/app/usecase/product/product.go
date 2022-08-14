@@ -9,7 +9,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
-	storeRepo "github.com/fiber-go-sis-app/internal/app/repo/store"
+	statRepo "github.com/fiber-go-sis-app/internal/app/repo/stat"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
 	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 )
@@ -23,7 +23,7 @@ func GetAllDTProduct(ctx *fiber.Ctx, page int, limit int, search string) (model.
 		return model.ListProductDataResponse{}, err
 	}
 
-	totalProduct, err := storeRepo.GetTotalProduct(ctx, model.DefaultStoreID)
+	totalProduct, err := statRepo.GetTotalProduct(ctx, constant.DefaultStoreID)
 	if err != nil {
 		return model.ListProductDataResponse{}, err
 	}
@@ -83,8 +83,8 @@ func InsertProduct(ctx *fiber.Ctx, product model.Product) error {
 		return err
 	}
 
-	if err := storeRepo.UpdateTotalProduct(tx, model.StoreStats{
-		StoreID:      model.DefaultStoreID,
+	if err := statRepo.UpdateTotalProduct(tx, model.StoreStats{
+		StoreID:      constant.DefaultStoreID,
 		TotalProduct: 1,
 	}); err != nil {
 		return err
@@ -115,12 +115,12 @@ func DeleteProduct(ctx *fiber.Ctx, PLU string) error {
 	}
 	defer tx.Rollback()
 
-	if err := productRepo.DeleteProduct(tx, PLU); err != nil {
+	if err := productRepo.DeleteProduct(ctx, tx, PLU); err != nil {
 		return err
 	}
 
-	if err := storeRepo.UpdateTotalProduct(tx, model.StoreStats{
-		StoreID:      model.DefaultStoreID,
+	if err := statRepo.UpdateTotalProduct(tx, model.StoreStats{
+		StoreID:      constant.DefaultStoreID,
 		TotalProduct: -1,
 	}); err != nil {
 		return err

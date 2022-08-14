@@ -1,4 +1,4 @@
-package store
+package stat
 
 import (
 	"database/sql"
@@ -19,7 +19,6 @@ const queryGetStoreStats = `
 func GetStoreStats(ctx *fiber.Ctx, storeID string) (model.StoreStats, error) {
 	var storeStats model.StoreStats
 	db := postgresPkg.GetPgConn()
-
 	if err := db.GetContext(ctx.Context(), &storeStats, queryGetStoreStats, storeID); err != nil {
 		if err == sql.ErrNoRows {
 			return storeStats, nil
@@ -40,7 +39,6 @@ const queryGetTotalProduct = `
 func GetTotalProduct(ctx *fiber.Ctx, storeID string) (int64, error) {
 	var totalProduct int64
 	db := postgresPkg.GetPgConn()
-
 	if err := db.GetContext(ctx.Context(), &totalProduct, queryGetTotalProduct, storeID); err != nil {
 		if err == sql.ErrNoRows {
 			return totalProduct, nil
@@ -61,7 +59,6 @@ const queryGetTotalInventory = `
 func GetTotalInventory(ctx *fiber.Ctx, storeID string) (int64, error) {
 	var totalInventory int64
 	db := postgresPkg.GetPgConn()
-
 	if err := db.GetContext(ctx.Context(), &totalInventory, queryGetTotalInventory, storeID); err != nil {
 		if err == sql.ErrNoRows {
 			return totalInventory, nil

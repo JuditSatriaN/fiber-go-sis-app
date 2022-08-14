@@ -75,13 +75,13 @@ func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) (model.Product, boo
 	return product, true, nil
 }
 
-const insertProduct = `
+const queryInsertProduct = `
 	INSERT INTO products (plu, name, barcode, ppn)
 	VALUES (:plu, :name, :barcode, :ppn)
 `
 
 func InsertProduct(tx *sqlx.Tx, product model.Product) error {
-	rows, err := tx.NamedQuery(insertProduct, product)
+	rows, err := tx.NamedQuery(queryInsertProduct, product)
 	if err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func InsertProduct(tx *sqlx.Tx, product model.Product) error {
 	return err
 }
 
-const updateProduct = `
+const queryUpdateProduct = `
 	UPDATE products SET
 		name = :name,
 	    barcode = :barcode,
@@ -101,16 +101,16 @@ const updateProduct = `
 
 func UpdateProduct(ctx *fiber.Ctx, product model.Product) error {
 	db := postgresPkg.GetPgConn()
-	_, err := db.NamedQueryContext(ctx.Context(), updateProduct, product)
+	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateProduct, product)
 	return err
 }
 
-const deleteProduct = `
+const queryDeleteProduct = `
 	DELETE FROM products
 	WHERE plu = $1
 `
 
-func DeleteProduct(tx *sqlx.Tx, productID string) error {
-	_, err := tx.Exec(deleteProduct, productID)
+func DeleteProduct(ctx *fiber.Ctx, tx *sqlx.Tx, productID string) error {
+	_, err := tx.ExecContext(ctx.Context(), queryDeleteProduct, productID)
 	return err
 }

@@ -48,19 +48,18 @@ func GetUnitByID(ctx *fiber.Ctx, ID int) (model.Unit, bool, error) {
 	return unit, true, nil
 }
 
-const insertUnit = `
+const queryInsertUnit = `
 	INSERT INTO units (name)
 	VALUES (:name)
 `
 
 func InsertUnit(ctx *fiber.Ctx, unit model.Unit) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), insertUnit, unit)
+	_, err := db.NamedQueryContext(ctx.Context(), queryInsertUnit, unit)
 	return err
 }
 
-const updateUnit = `
+const queryUpdateUnit = `
 	UPDATE units SET
 		name = :name,
 		update_time = NOW()
@@ -69,19 +68,17 @@ const updateUnit = `
 
 func UpdateUnit(ctx *fiber.Ctx, unit model.Unit) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.NamedQueryContext(ctx.Context(), updateUnit, unit)
+	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateUnit, unit)
 	return err
 }
 
-const deleteUnit = `
+const queryDeleteUnit = `
 	DELETE FROM units
 	WHERE id = $1
 `
 
 func DeleteUnit(ctx *fiber.Ctx, ID int) error {
 	db := postgresPkg.GetPgConn()
-
-	_, err := db.ExecContext(ctx.Context(), deleteUnit, ID)
+	_, err := db.ExecContext(ctx.Context(), queryDeleteUnit, ID)
 	return err
 }

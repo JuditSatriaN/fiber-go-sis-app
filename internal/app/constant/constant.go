@@ -20,3 +20,7 @@ const WebSource = "web"
 
 const PagesWebDirectory = "web/template"
 const PagesSISWebDirectory = PagesWebDirectory + "/sis/pages"
+
+// Default Store ID
+
+const DefaultStoreID = "1"
