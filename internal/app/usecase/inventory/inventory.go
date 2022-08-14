@@ -2,15 +2,15 @@ package inventory
 
 import (
 	"fmt"
-	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
-	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/databases/postgres"
 
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 
 	inventoryRepo "github.com/fiber-go-sis-app/internal/app/repo/inventory"
+	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
 	storeRepo "github.com/fiber-go-sis-app/internal/app/repo/store"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
+	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 )
 
 // GetDTAllInventory : Get List Of Inventory For Datatable

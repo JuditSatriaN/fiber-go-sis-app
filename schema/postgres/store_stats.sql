@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS store_stats
 (
     store_id        VARCHAR(30) NOT NULL PRIMARY KEY,
-    total_product   BIGINT      NOT NULL DEFAULT 0,
-    total_inventory BIGINT      NOT NULL DEFAULT 0,
+    total_product   INT         NOT NULL DEFAULT 0,
+    total_inventory INT         NOT NULL DEFAULT 0,
     create_time     TIMESTAMP   NOT NULL DEFAULT NOW(),
     update_time     TIMESTAMP
 );

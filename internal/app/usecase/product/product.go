@@ -11,7 +11,7 @@ import (
 	productRepo "github.com/fiber-go-sis-app/internal/app/repo/product"
 	storeRepo "github.com/fiber-go-sis-app/internal/app/repo/store"
 	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
-	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/databases/postgres"
+	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 )
 
 // GetAllDTProduct : Get List Of Product for Datatable
