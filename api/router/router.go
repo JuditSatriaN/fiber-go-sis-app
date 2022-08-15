@@ -8,6 +8,7 @@ import (
 	memberRoute "github.com/fiber-go-sis-app/api/router/member"
 	productRoute "github.com/fiber-go-sis-app/api/router/product"
 	salesRoute "github.com/fiber-go-sis-app/api/router/sales"
+	statRoute "github.com/fiber-go-sis-app/api/router/stat"
 	unitRoute "github.com/fiber-go-sis-app/api/router/unit"
 	userRoute "github.com/fiber-go-sis-app/api/router/user"
 )
@@ -22,4 +23,5 @@ func BuildAPIRouter(app *fiber.App) {
 	memberRoute.BuildMemberAPI(apiGroup)
 	productRoute.BuildProductAPI(apiGroup)
 	inventoryRoute.BuildInventoryAPI(apiGroup)
+	statRoute.BuildProductSalesStatsDailyAPI(apiGroup)
 }
