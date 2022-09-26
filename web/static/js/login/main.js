@@ -54,3 +54,13 @@ function processLogin(user_name, password) {
         loadingIndicator.hide();
     });
 }
+
+function processLogout(){
+    sessionStorage.removeItem("user_id");
+    sessionStorage.removeItem("user_name");
+    sessionStorage.removeItem("full_name");
+
+    document.cookie = 'jwtRefreshToken' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    document.cookie = 'jwtAccessToken' +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    window.location.href = $('#baseURL').text();
+}

@@ -61,7 +61,7 @@ function getParamValue() {
         "data": {
             "id": id,
             "plu": product[0].id,
-            "unit_id": unit[0].id,
+            "unit_id": parseInt(unit[0].id),
             "stock": parseInt(stock),
             "price": parseInt(price),
             "purchase": parseInt(purchase),
