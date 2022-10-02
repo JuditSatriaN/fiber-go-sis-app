@@ -28,4 +28,5 @@ type SalesDetail struct {
 	Price    float32 `json:"price" db:"price"`
 	Purchase float32 `json:"purchase" db:"purchase"`
 	Discount float32 `json:"discount" db:"discount"`
+	MemberID int     `json:"member_id" db:"member_id"`
 }
