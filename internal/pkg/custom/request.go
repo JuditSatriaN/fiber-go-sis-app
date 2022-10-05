@@ -42,7 +42,7 @@ func BuildPageAndLimit(ctx *fiber.Ctx) (int, int, error) {
 	return page, limit, nil
 }
 
-// BuildOffset global function to build offset test reset 1 branch 1
+// BuildOffset global function to build offset test reset 1 branch 1 dan 2
 func BuildOffset(page int, limit int) int {
 	offset := (page - 1) * limit
 	return offset
