@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS sales_detail
     price       NUMERIC(10, 2) NOT NULL DEFAULT 0,
     purchase    NUMERIC(10, 2) NOT NULL DEFAULT 0,
     discount    NUMERIC(10, 2) NOT NULL DEFAULT 0,
+    member_id   BIGINT         NOT NULL DEFAULT 0,
     create_time TIMESTAMP      NOT NULL DEFAULT NOW(),
     update_time TIMESTAMP
 );
