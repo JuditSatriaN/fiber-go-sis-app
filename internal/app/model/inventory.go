@@ -21,3 +21,8 @@ type ListInventoryDataResponse struct {
 	Total int64
 	Data  []Inventory
 }
+
+type UpdateStockAfterSalesData struct {
+	ID  int   `json:"id" db:"id"`
+	Qty int64 `json:"qty" db:"qty"`
+}

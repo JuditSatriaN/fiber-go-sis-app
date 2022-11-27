@@ -17,16 +17,17 @@ type SalesHead struct {
 }
 
 type SalesDetail struct {
-	Invoice  string  `json:"invoice" db:"invoice" validate:"max=15"`
-	UserID   string  `json:"user_id" db:"user_id" validate:"max=30"`
-	PLU      string  `json:"plu" db:"plu" validate:"max=30"`
-	Name     string  `json:"name" db:"name" validate:"max=255"`
-	UnitName string  `json:"unit_name" db:"unit_name" validate:"max=30"`
-	Barcode  string  `json:"barcode" db:"barcode" validate:"max=30"`
-	Ppn      bool    `json:"ppn" db:"ppn"`
-	Qty      int64   `json:"qty" db:"qty"`
-	Price    float32 `json:"price" db:"price"`
-	Purchase float32 `json:"purchase" db:"purchase"`
-	Discount float32 `json:"discount" db:"discount"`
-	MemberID int     `json:"member_id" db:"member_id"`
+	Invoice     string  `json:"invoice" db:"invoice" validate:"max=15"`
+	UserID      string  `json:"user_id" db:"user_id" validate:"max=30"`
+	PLU         string  `json:"plu" db:"plu" validate:"max=30"`
+	Name        string  `json:"name" db:"name" validate:"max=255"`
+	UnitName    string  `json:"unit_name" db:"unit_name" validate:"max=30"`
+	Barcode     string  `json:"barcode" db:"barcode" validate:"max=30"`
+	Ppn         bool    `json:"ppn" db:"ppn"`
+	Qty         int64   `json:"qty" db:"qty"`
+	Price       float32 `json:"price" db:"price"`
+	Purchase    float32 `json:"purchase" db:"purchase"`
+	Discount    float32 `json:"discount" db:"discount"`
+	MemberID    int     `json:"member_id" db:"member_id"`
+	InventoryID int     `json:"inventory_id" db:"inventory_id"`
 }
