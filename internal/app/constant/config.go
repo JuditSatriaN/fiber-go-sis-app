@@ -1,7 +1,7 @@
 package constant
 
 var LinkPageList = map[string]string{
-	// Login URL
+	// Login URL a
 	"WebLoginURL": WebLoginURL,
 
 	// SIS URL
