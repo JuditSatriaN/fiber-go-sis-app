@@ -29,4 +29,6 @@ function fillFormEdit(row) {
     $("#modalUpsert #member_price").val(row["member_price"]);
     $("#modalUpsert #purchase").val(row["purchase"]);
     $("#modalUpsert #discount").val(row["discount"]);
+    $("#modalUpsert #current_price_form").show();
+    $("#modalUpsert #current_price").val(row["price"]);
 }
