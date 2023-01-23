@@ -23,7 +23,7 @@ func GetAllDTProduct(ctx *fiber.Ctx, page int, limit int, search string) (model.
 		return model.ListProductDataResponse{}, err
 	}
 
-	totalProduct, err := statRepo.GetTotalProduct(ctx, constant.DefaultStoreID)
+	totalProduct, err := statRepo.GetTotalProduct(ctx, search)
 	if err != nil {
 		return model.ListProductDataResponse{}, err
 	}

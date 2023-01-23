@@ -23,7 +23,7 @@ func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (mode
 		return model.ListInventoryDataResponse{}, err
 	}
 
-	totalInventory, err := statRepo.GetTotalInventory(ctx, constant.DefaultStoreID)
+	totalInventory, err := statRepo.GetTotalInventory(ctx, search)
 	if err != nil {
 		return model.ListInventoryDataResponse{}, err
 	}
