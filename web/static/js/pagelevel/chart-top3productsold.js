@@ -8,19 +8,19 @@ async function sendGetTop3ProductSold() {
 $(function () {
     sendGetTop3ProductSold().then(function (results) {
         parseChartTop3ProductSold(results)
+        parseTextTop3ProductSold(results)
     }).catch(function (err) {
         buildErrorPopup(err.response.data.message);
     }).finally(function () {
     });
 
 
-
 });
 
-function parseChartTop3ProductSold(results){
+function parseChartTop3ProductSold(results) {
     let labels = []
     let dataValue = []
-    $.each(results, function( index, result) {
+    $.each(results, function (index, result) {
         labels.push(result["name"].toString())
         dataValue.push(result["total_sold"].toString())
     });
@@ -59,4 +59,13 @@ function parseChartTop3ProductSold(results){
             cutoutPercentage: 80,
         },
     });
+}
+
+function parseTextTop3ProductSold(results) {
+    let htmlString = ''
+    let backgroundColor = ['#4e73df', '#1cc88a', '#36b9cc']
+    $.each(results, function (index, result) {
+        htmlString += `<span class="mr-2"><i class="fas fa-circle" style="color: ` + backgroundColor[index] + `;"></i> ` + result["name"] + ` </span>`
+    });
+    $('#top3ProductSoldTodayText').html(htmlString)
 }
