@@ -24,8 +24,9 @@ func GetStatisticDashboard(ctx *fiber.Ctx) (model.StatisticDashboard, error) {
 	var totalPemasukan float64
 	var totalTransaksi float64
 	var totalPendapatan float64
+	var totalPendapatanMonthly []model.TotalPendapatanMonthly
 
-	wg.Add(4)
+	wg.Add(5)
 	go func() {
 		defer wg.Done()
 		totalProduct, err = statRepo.GetTotalProductSoldToday(ctx)
@@ -42,6 +43,10 @@ func GetStatisticDashboard(ctx *fiber.Ctx) (model.StatisticDashboard, error) {
 		defer wg.Done()
 		totalPendapatan, err = statRepo.GetTotalPendapatanToday(ctx)
 	}()
+	go func() {
+		defer wg.Done()
+		totalPendapatanMonthly, err = statRepo.GetTotalPendapatanMonthly(ctx)
+	}()
 	wg.Wait()
 	if err != nil {
 		return model.StatisticDashboard{}, err
@@ -52,5 +57,6 @@ func GetStatisticDashboard(ctx *fiber.Ctx) (model.StatisticDashboard, error) {
 		TotalPemasukanHariIni:      totalPemasukan,
 		TotalPendapatanHariIni:     totalPendapatan,
 		TotalTransaksiHariIni:      totalTransaksi,
+		TotalPendapatanMonthly:     totalPendapatanMonthly,
 	}, nil
 }

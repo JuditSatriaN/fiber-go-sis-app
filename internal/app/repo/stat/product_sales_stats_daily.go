@@ -2,9 +2,11 @@ package stat
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/fiber-go-sis-app/internal/app/model"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
+	"time"
 
 	postgresPkg "github.com/fiber-go-sis-app/internal/pkg/database/postgres"
 )
@@ -107,7 +109,7 @@ func GetTotalTransaksiToday(ctx *fiber.Ctx) (float64, error) {
 }
 
 const queryGetTotalPendapatanToday = `
-	SELECT SUM(total_purchase - total_price)
+	SELECT SUM(total_price - total_purchase)
 	FROM sales_head
 	WHERE create_time::date = CURRENT_DATE
 	LIMIT 1;
@@ -124,4 +126,40 @@ func GetTotalPendapatanToday(ctx *fiber.Ctx) (float64, error) {
 	}
 
 	return totalPendapatan, nil
+}
+
+const queryGetTotalPendapatanMonthly = `
+	WITH months as (
+		SELECT
+			generate_series(date '%s',
+							date '%s',
+		'1 month'::interval) as bulan
+	)
+	SELECT
+		months.bulan as time_tx,
+		COALESCE(SUM(sales_head.total_price - sales_head.total_purchase), 0) as total_penjualan
+	FROM months
+	LEFT JOIN sales_head ON months.bulan = date_trunc('month', sales_head.create_time)
+	GROUP BY months.bulan
+	ORDER BY months.bulan;
+`
+
+func GetTotalPendapatanMonthly(ctx *fiber.Ctx) ([]model.TotalPendapatanMonthly, error) {
+	var data []model.TotalPendapatanMonthly
+	now := time.Now()
+	currentYear, _, _ := now.Date()
+
+	startOfYear := time.Date(currentYear, time.January, 1, 0, 0, 0, 0, time.UTC)
+	startOfYearString := startOfYear.Format("2006-01-02")
+
+	endOfYear := time.Date(currentYear, time.December, 31, 23, 59, 59, 999999999, time.UTC)
+	endOfYearString := endOfYear.Format("2006-01-02")
+
+	query := fmt.Sprintf(queryGetTotalPendapatanMonthly, startOfYearString, endOfYearString)
+	db := postgresPkg.GetPgConn()
+	if err := db.SelectContext(ctx.Context(), &data, query); err != nil {
+		return data, nil
+	}
+
+	return data, nil
 }
