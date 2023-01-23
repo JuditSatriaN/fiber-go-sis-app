@@ -16,3 +16,13 @@ func GetTop3ProductSalesDailyHandler(ctx *fiber.Ctx) error {
 
 	return customPkg.BuildJSONRes(ctx, results)
 }
+
+func GetStatisticDashboard(ctx *fiber.Ctx) error {
+	results, err := statUC.GetStatisticDashboard(ctx)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+	return customPkg.BuildJSONRes(ctx, results)
+}
