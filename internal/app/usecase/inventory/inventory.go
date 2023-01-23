@@ -36,18 +36,22 @@ func GetDTAllInventory(ctx *fiber.Ctx, page int, limit int, search string) (mode
 
 // SearchInventoryByParam : Search Inventory By Parameter Request
 func SearchInventoryByParam(ctx *fiber.Ctx, search string) ([]model.Inventory, error) {
-	product, found, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
+	products, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
 	if err != nil {
 		return []model.Inventory{}, err
 	}
 
-	if !found {
+	if len(products) == 0 {
 		return []model.Inventory{}, fmt.Errorf("product tidak ditemukan")
 	}
 
-	results, err := inventoryRepo.GetInventoryByPLU(ctx, product.PLU)
-	if err != nil {
-		return []model.Inventory{}, err
+	var results []model.Inventory
+	for _, product := range products {
+		result, err := inventoryRepo.GetInventoryByPLU(ctx, product.PLU)
+		if err != nil {
+			return []model.Inventory{}, err
+		}
+		results = append(results, result...)
 	}
 
 	return results, nil

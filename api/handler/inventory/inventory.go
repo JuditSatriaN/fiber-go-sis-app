@@ -33,14 +33,14 @@ func GetDTInventoryHandler(ctx *fiber.Ctx) error {
 func SearchInventoryHandler(ctx *fiber.Ctx) error {
 	search := ctx.Query("search", "")
 
-	result, err := inventoryUC.SearchInventoryByParam(ctx, search)
+	results, err := inventoryUC.SearchInventoryByParam(ctx, search)
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	return customPkg.BuildJSONRes(ctx, result)
+	return customPkg.BuildJSONRes(ctx, results)
 }
 
 func InsertInventoryHandler(ctx *fiber.Ctx) error {
