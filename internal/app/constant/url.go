@@ -11,6 +11,7 @@ const WebSISHomeURL = BaseSISURL
 const WebSISUserURL = BaseSISURL + "user"
 const WebSISUnitURL = BaseSISURL + "unit"
 const WebSISMemberURL = BaseSISURL + "member"
+const WebSISSystemConfURL = BaseSISURL + "system_conf"
 const WebSISProductURL = BaseSISURL + "product"
 const WebSISInventoryURL = BaseSISURL + "inventory"
 

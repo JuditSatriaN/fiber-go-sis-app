@@ -64,6 +64,13 @@
         </a>
     </li>
 
+    <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISSystemConf }} active {{ end }}">
+        <a class="nav-link" href="{{ .LinkPageList.WebSISSystemConf }}" aria-expanded="true">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Setting</span>
+        </a>
+    </li>
+
 <!--    &lt;!&ndash; Nav Item - Utilities Collapse Menu &ndash;&gt;-->
 <!--    <li class="nav-item">-->
 <!--        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"-->

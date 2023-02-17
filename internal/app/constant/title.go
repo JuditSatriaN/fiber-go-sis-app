@@ -11,6 +11,7 @@ const WebSISHomeTitle = WebSISTitle + "Home"
 const WebSISUserTitle = WebSISTitle + "User"
 const WebSISUnitTitle = WebSISTitle + "Unit"
 const WebSISMemberTitle = WebSISTitle + "Member"
+const WebSISSystemConfTitle = WebSISTitle + "Setting"
 const WebSISProductTitle = WebSISTitle + "Product"
 const WebSISInventoryTitle = WebSISTitle + "Inventory"
 
