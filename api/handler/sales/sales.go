@@ -63,3 +63,21 @@ func GetSalesDetailByInvoiceHandler(ctx *fiber.Ctx) error {
 
 	return customPkg.BuildDatatableRes(ctx, result.Total, result.Data)
 }
+
+func InsertVoidHandler(ctx *fiber.Ctx) error {
+	var req model.VoidRequest
+
+	if err := customPkg.ValidateRequest(ctx, &req); err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	if err := salesUC.InsertVoid(ctx, req.Invoice); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": err.Error(),
+		})
+	}
+
+	return ctx.SendString("Data void berhasil disimpan")
+}
