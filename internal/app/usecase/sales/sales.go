@@ -3,6 +3,7 @@ package sales
 import (
 	"fmt"
 	inventoryRepo "github.com/fiber-go-sis-app/internal/app/repo/inventory"
+	customPkg "github.com/fiber-go-sis-app/internal/pkg/custom"
 	"time"
 
 	"github.com/fiber-go-sis-app/internal/app/model"
@@ -69,4 +70,36 @@ func InsertSales(ctx *fiber.Ctx, sales model.Sales) error {
 	}
 
 	return nil
+}
+
+// GetDTAllSalesHead : Get List Of Sales Head For Datatable
+func GetDTAllSalesHead(ctx *fiber.Ctx, page int, limit int, search string) (model.ListSalesHeadDataResponse, error) {
+	offset := customPkg.BuildOffset(page, limit)
+
+	salesHead, err := salesRepo.GetALlSalesHead(ctx, search, limit, offset)
+	if err != nil {
+		return model.ListSalesHeadDataResponse{}, err
+	}
+
+	totalSalesHead, err := salesRepo.GetTotalSalesHead(ctx, search)
+	if err != nil {
+		return model.ListSalesHeadDataResponse{}, err
+	}
+
+	return model.ListSalesHeadDataResponse{
+		Total: totalSalesHead,
+		Data:  salesHead,
+	}, nil
+}
+
+func GetSalesDetailByInvoice(ctx *fiber.Ctx, invoice string) (model.ListSalesDetailDataResponse, error) {
+	data, err := salesRepo.GetALlSalesDetailByInvoice(ctx, invoice)
+	if err != nil {
+		return model.ListSalesDetailDataResponse{}, err
+	}
+
+	return model.ListSalesDetailDataResponse{
+		Total: int64(len(data)),
+		Data:  data,
+	}, nil
 }

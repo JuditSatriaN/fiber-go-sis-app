@@ -6,6 +6,7 @@ type Sales struct {
 }
 
 type SalesHead struct {
+	ID            int64   `json:"id" db:"id"`
 	Invoice       string  `json:"invoice" db:"invoice" validate:"max=15"`
 	UserID        string  `json:"user_id" db:"user_id" validate:"max=30"`
 	TotalItem     int     `json:"total_item" db:"total_item"`
@@ -17,6 +18,7 @@ type SalesHead struct {
 }
 
 type SalesDetail struct {
+	ID          int64   `json:"id" db:"id"`
 	Invoice     string  `json:"invoice" db:"invoice" validate:"max=15"`
 	UserID      string  `json:"user_id" db:"user_id" validate:"max=30"`
 	PLU         string  `json:"plu" db:"plu" validate:"max=30"`
@@ -30,4 +32,14 @@ type SalesDetail struct {
 	Discount    float32 `json:"discount" db:"discount"`
 	MemberID    int     `json:"member_id" db:"member_id"`
 	InventoryID int     `json:"inventory_id" db:"inventory_id"`
+}
+
+type ListSalesHeadDataResponse struct {
+	Total int64
+	Data  []SalesHead
+}
+
+type ListSalesDetailDataResponse struct {
+	Total int64
+	Data  []SalesDetail
 }

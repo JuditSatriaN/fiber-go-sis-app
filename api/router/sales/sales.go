@@ -9,4 +9,6 @@ import (
 // BuildSalesAPI : API to handle sales
 func BuildSalesAPI(api fiber.Router) {
 	api.Post("/sales", salesHandler.InsertSalesHandler)
+	api.Get("/list_sales_head", salesHandler.GetSalesHeadHandler)
+	api.Get("/list_sales_detail_by_invoice", salesHandler.GetSalesDetailByInvoiceHandler)
 }
