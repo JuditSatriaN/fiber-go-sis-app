@@ -43,7 +43,7 @@ func GetTotalSalesHead(ctx *fiber.Ctx, search string) (int64, error) {
 
 const queryGetALlSalesHead = `
 	SELECT id, invoice, user_id, total_item, total_price, total_purchase,
-	       total_tax, total_discount, total_pay
+	       total_tax, total_discount, total_pay, create_time
 	FROM sales_head
 	WHERE $1 = '' OR value_text_search @@ plainto_tsquery($1)
 	ORDER BY id DESC 
@@ -81,7 +81,7 @@ func GetALlSalesDetailByInvoice(ctx *fiber.Ctx, invoice string) ([]model.SalesDe
 
 const queryGetSalesHeadByInvoice = `
 	SELECT id, invoice, user_id, total_item, total_price, total_purchase,
-	       total_tax, total_discount, total_pay
+	       total_tax, total_discount, total_pay, create_time
 	FROM sales_head
 	WHERE invoice = $1
 `

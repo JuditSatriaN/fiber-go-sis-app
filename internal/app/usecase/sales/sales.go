@@ -87,9 +87,25 @@ func GetDTAllSalesHead(ctx *fiber.Ctx, page int, limit int, search string) (mode
 		return model.ListSalesHeadDataResponse{}, err
 	}
 
+	var res []model.SalesHeadResponse
+	for _, v := range salesHead {
+		res = append(res, model.SalesHeadResponse{
+			ID:            v.ID,
+			Invoice:       v.Invoice,
+			UserID:        v.UserID,
+			TotalItem:     v.TotalItem,
+			TotalPrice:    v.TotalPrice,
+			TotalPurchase: v.TotalPurchase,
+			TotalTax:      v.TotalTax,
+			TotalDiscount: v.TotalDiscount,
+			TotalPay:      v.TotalPay,
+			CreateTimeStr: v.CreateTime.Format("2006-01-02 15:04:05"),
+		})
+	}
+
 	return model.ListSalesHeadDataResponse{
 		Total: totalSalesHead,
-		Data:  salesHead,
+		Data:  res,
 	}, nil
 }
 
@@ -99,9 +115,30 @@ func GetSalesDetailByInvoice(ctx *fiber.Ctx, invoice string) (model.ListSalesDet
 		return model.ListSalesDetailDataResponse{}, err
 	}
 
+	var res []model.SalesDetailResponse
+	for _, v := range data {
+		res = append(res, model.SalesDetailResponse{
+			ID:            v.ID,
+			Invoice:       v.Invoice,
+			UserID:        v.UserID,
+			PLU:           v.PLU,
+			Name:          v.Name,
+			UnitName:      v.UnitName,
+			Barcode:       v.Barcode,
+			Ppn:           v.Ppn,
+			Qty:           v.Qty,
+			Price:         v.Price,
+			Purchase:      v.Purchase,
+			Discount:      v.Discount,
+			MemberID:      v.MemberID,
+			InventoryID:   v.InventoryID,
+			CreateTimeStr: v.CreateTime.Format("2006-01-02 15:04:05"),
+		})
+	}
+
 	return model.ListSalesDetailDataResponse{
 		Total: int64(len(data)),
-		Data:  data,
+		Data:  res,
 	}, nil
 }
 

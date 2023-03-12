@@ -20,6 +20,10 @@ const WebSISInventoryTitle = WebSISTitle + "Inventory"
 const WebSISUpdateStockTitle = WebSISTitle + "Update Stock"
 const WebSISVoidTransactionTitle = WebSISTitle + "Void Transaction"
 
+// Web SIS Laporan
+
+const WebSISLaporanFakturTitle = WebSISTitle + "Laporan - Faktur"
+
 // Errors Title
 
 const Web404NotFoundTitle = "404 Not Found"

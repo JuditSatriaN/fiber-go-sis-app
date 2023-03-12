@@ -4,15 +4,15 @@ $(function () {
 
 function actionFormatter() {
     return [
-        '<a class="save" href="javascript:void(0)" title="Hapus"><i class="fa fas fa-trash"></i></a>',
+        '<a class="save" href="javascript:void(0)" title="Edit"><i class="fa fas fa-edit"></i></a>',
     ].join('')
 }
 
 window.eventActions = {
     'click .save': function (e, value, row, index) {
-        buildDeleteDataPopup("Apakah anda yakin ingin menghapus transaksi ini?", function () {
-            processVoidTransaction(row);
-        });
+        $("#modalGetLaporanSalesDetail #invoiceModal").val(row["invoice"]);
+        $('#modalGetLaporanSalesDetail').modal('show');
+        $('#modalGetLaporanSalesDetail #table-get-sales-detail-modal').bootstrapTable('refresh');
     }
 }
 
@@ -103,7 +103,7 @@ function initTable() {
     });
 }
 
-async function sendGetVoidTransactionRequest(params) {
+async function sendGetLaporanFakturRequest(params) {
     let page = 1;
     let req = params.data;
     let baseURL = $('#baseURL').text();
@@ -126,7 +126,7 @@ async function sendGetVoidTransactionRequest(params) {
 function ajaxRequest(params) {
     let loadingIndicator = $('body').loadingIndicator().data("loadingIndicator");
 
-    sendGetVoidTransactionRequest(params).then(function (results) {
+    sendGetLaporanFakturRequest(params).then(function (results) {
         params.success(results);
     }).catch(function (err) {
         params.error(err);

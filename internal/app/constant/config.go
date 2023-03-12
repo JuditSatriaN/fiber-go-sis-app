@@ -14,6 +14,7 @@ var LinkPageList = map[string]string{
 	"WebSISUpdateStock":     WebSISUpdateStockURL,
 	"WebSISSystemConf":      WebSISSystemConfURL,
 	"WebSISVoidTransaction": WebSISVoidTransactionURL,
+	"WebSISLaporanFaktur":   WebSISLaporanFakturURL,
 }
 
 type WebData struct {

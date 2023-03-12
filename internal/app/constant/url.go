@@ -19,3 +19,7 @@ const WebSISInventoryURL = BaseSISURL + "inventory"
 
 const WebSISUpdateStockURL = BaseSISURL + "update_stock"
 const WebSISVoidTransactionURL = BaseSISURL + "void_transaction"
+
+// Web SIS Laporan Side Constanta
+
+const WebSISLaporanFakturURL = BaseSISURL + "laporan_faktur"
