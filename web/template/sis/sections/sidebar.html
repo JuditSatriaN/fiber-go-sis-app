@@ -105,6 +105,13 @@
         </a>
     </li>
 
+    <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISVoidTransaction }} active {{ end }}">
+        <a class="nav-link" href="{{ .LinkPageList.WebSISVoidTransaction }}" aria-expanded="true">
+            <i class="fas fa-fw fa-solid fa-basket-shopping"></i>
+            <span>Void Transaksi</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

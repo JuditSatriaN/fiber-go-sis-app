@@ -5,14 +5,15 @@ var LinkPageList = map[string]string{
 	"WebLoginURL": WebLoginURL,
 
 	// SIS URL
-	"WebSISHome":        WebSISHomeURL,
-	"WebSISUser":        WebSISUserURL,
-	"WebSISUnit":        WebSISUnitURL,
-	"WebSISMember":      WebSISMemberURL,
-	"WebSISProduct":     WebSISProductURL,
-	"WebSISInventory":   WebSISInventoryURL,
-	"WebSISUpdateStock": WebSISUpdateStockURL,
-	"WebSISSystemConf":  WebSISSystemConfURL,
+	"WebSISHome":            WebSISHomeURL,
+	"WebSISUser":            WebSISUserURL,
+	"WebSISUnit":            WebSISUnitURL,
+	"WebSISMember":          WebSISMemberURL,
+	"WebSISProduct":         WebSISProductURL,
+	"WebSISInventory":       WebSISInventoryURL,
+	"WebSISUpdateStock":     WebSISUpdateStockURL,
+	"WebSISSystemConf":      WebSISSystemConfURL,
+	"WebSISVoidTransaction": WebSISVoidTransactionURL,
 }
 
 type WebData struct {

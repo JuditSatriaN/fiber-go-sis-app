@@ -14,6 +14,7 @@ import (
 
 	// Proses Handler
 	updateStockHandler "github.com/fiber-go-sis-app/web/app/handler/update_stock"
+	voidHandler "github.com/fiber-go-sis-app/web/app/handler/void"
 )
 
 func BuildSISRoutes(service fiber.Router) {
@@ -26,4 +27,5 @@ func BuildSISRoutes(service fiber.Router) {
 	service.Get("/system_conf", systemConfHandler.WebSISSystemConfHandler)
 
 	service.Get("/update_stock", updateStockHandler.WebSISUpdateStockHandler)
+	service.Get("/void_transaction", voidHandler.WebSISVoidTransactionHandler)
 }

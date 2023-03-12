@@ -18,3 +18,4 @@ const WebSISInventoryURL = BaseSISURL + "inventory"
 // Web SIS Process Side Constanta
 
 const WebSISUpdateStockURL = BaseSISURL + "update_stock"
+const WebSISVoidTransactionURL = BaseSISURL + "void_transaction"

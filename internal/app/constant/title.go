@@ -18,6 +18,7 @@ const WebSISInventoryTitle = WebSISTitle + "Inventory"
 // Web SIS Proses
 
 const WebSISUpdateStockTitle = WebSISTitle + "Update Stock"
+const WebSISVoidTransactionTitle = WebSISTitle + "Void Transaction"
 
 // Errors Title
 
