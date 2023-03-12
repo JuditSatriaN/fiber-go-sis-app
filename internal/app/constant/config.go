@@ -1,17 +1,20 @@
 package constant
 
 var LinkPageList = map[string]string{
-	// Login URL
+	// Login URL a
 	"WebLoginURL": WebLoginURL,
 
 	// SIS URL
-	"WebSISHome":        WebSISHomeURL,
-	"WebSISUser":        WebSISUserURL,
-	"WebSISUnit":        WebSISUnitURL,
-	"WebSISMember":      WebSISMemberURL,
-	"WebSISProduct":     WebSISProductURL,
-	"WebSISInventory":   WebSISInventoryURL,
-	"WebSISUpdateStock": WebSISUpdateStockURL,
+	"WebSISHome":            WebSISHomeURL,
+	"WebSISUser":            WebSISUserURL,
+	"WebSISUnit":            WebSISUnitURL,
+	"WebSISMember":          WebSISMemberURL,
+	"WebSISProduct":         WebSISProductURL,
+	"WebSISInventory":       WebSISInventoryURL,
+	"WebSISUpdateStock":     WebSISUpdateStockURL,
+	"WebSISSystemConf":      WebSISSystemConfURL,
+	"WebSISVoidTransaction": WebSISVoidTransactionURL,
+	"WebSISLaporanFaktur":   WebSISLaporanFakturURL,
 }
 
 type WebData struct {

@@ -23,7 +23,7 @@ func GetAllDTProduct(ctx *fiber.Ctx, page int, limit int, search string) (model.
 		return model.ListProductDataResponse{}, err
 	}
 
-	totalProduct, err := statRepo.GetTotalProduct(ctx, constant.DefaultStoreID)
+	totalProduct, err := statRepo.GetTotalProduct(ctx, search)
 	if err != nil {
 		return model.ListProductDataResponse{}, err
 	}
@@ -60,16 +60,16 @@ func GetProductByPLU(ctx *fiber.Ctx, PLU string) (model.Product, error) {
 }
 
 func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) (model.Product, error) {
-	product, found, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
+	products, err := productRepo.GetProductByPLUOrBarcode(ctx, search)
 	if err != nil {
 		return model.Product{}, err
 	}
 
-	if !found {
+	if len(products) == 0 {
 		return model.Product{}, errors.New(constant.ErrNoDataFound)
 	}
 
-	return product, nil
+	return products[0], nil
 }
 
 func InsertProduct(ctx *fiber.Ctx, product model.Product) error {

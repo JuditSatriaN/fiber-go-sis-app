@@ -60,19 +60,14 @@ const queryGetProductByPLUOrBarcode = `
 	WHERE barcode = $1)
 `
 
-func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) (model.Product, bool, error) {
-	var product model.Product
+func GetProductByPLUOrBarcode(ctx *fiber.Ctx, search string) ([]model.Product, error) {
+	var products []model.Product
 	db := postgresPkg.GetPgConn()
 
-	if err := db.GetContext(ctx.Context(), &product, queryGetProductByPLUOrBarcode, search); err != nil {
-		if err == sql.ErrNoRows {
-			return product, false, nil
-		}
-
-		return product, false, err
+	if err := db.SelectContext(ctx.Context(), &products, queryGetProductByPLUOrBarcode, search); err != nil {
+		return products, err
 	}
-
-	return product, true, nil
+	return products, nil
 }
 
 const queryInsertProduct = `

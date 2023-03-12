@@ -59,8 +59,15 @@
 
     <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISInventory }} active {{ end }}">
         <a class="nav-link" href="{{ .LinkPageList.WebSISInventory }}" aria-expanded="true">
-            <i class="fas fa-fw fa-bucket"></i>
+            <i class="fas fa-fw fa-cart-shopping"></i>
             <span>Inventory</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISSystemConf }} active {{ end }}">
+        <a class="nav-link" href="{{ .LinkPageList.WebSISSystemConf }}" aria-expanded="true">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Setting</span>
         </a>
     </li>
 
@@ -95,6 +102,28 @@
         <a class="nav-link" href="{{ .LinkPageList.WebSISUpdateStock }}" aria-expanded="true">
             <i class="fas fa-fw fa-solid fa-basket-shopping"></i>
             <span>Update Stock</span>
+        </a>
+    </li>
+
+    <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISVoidTransaction }} active {{ end }}">
+        <a class="nav-link" href="{{ .LinkPageList.WebSISVoidTransaction }}" aria-expanded="true">
+            <i class="fas fa-fw fa-solid fa-coins"></i>
+            <span>Void Transaksi</span>
+        </a>
+    </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Laporan
+    </div>
+
+    <li class="nav-item {{ if eq .CurrentURL .LinkPageList.WebSISLaporanFaktur }} active {{ end }}">
+        <a class="nav-link" href="{{ .LinkPageList.WebSISLaporanFaktur }}" aria-expanded="true">
+            <i class="fas fa-fw fa-solid fa-file-text"></i>
+            <span>Laporan Faktur</span>
         </a>
     </li>
 

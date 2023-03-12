@@ -24,6 +24,7 @@
                        data-show-footer="true"
                        data-ajax="ajaxRequest"
                        data-show-columns="true"
+                       data-side-pagination="server"
                        data-page-list="[5, 10, 15, 20]">
                 </table>
             </div>
@@ -65,8 +66,28 @@
                         <label for="stock" class="col-form-label">Stok</label>
                         <input type="text" class="form-control" id="stock">
                     </div>
+                    <div class="form-group" id="current_price_form">
+                        <label class="col-form-label" for="price">Harga Jual Saat Ini</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">Rp</div>
+                            </div>
+                            <input type="text" class="form-control alternative-decimal-separator" id="current_price"
+                                   placeholder="Masukkan Harga Jual" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group" id="current_price_form">
+                        <label class="col-form-label" for="price">Kenaikan Harga (%)</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">%</div>
+                            </div>
+                            <input type="text" class="form-control alternative-decimal-separator" id="persentage_price"
+                                   placeholder="Masukkan Kenaikan Harga">
+                        </div>
+                    </div>
                     <div class="form-group">
-                        <label class="col-form-label" for="price">Harga Jual</label>
+                        <label class="col-form-label" for="price">Harga Jual Baru</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text">Rp</div>

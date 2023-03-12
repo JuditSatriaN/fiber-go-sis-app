@@ -31,15 +31,15 @@ func GetStoreStats(ctx *fiber.Ctx, storeID string) (model.StoreStats, error) {
 }
 
 const queryGetTotalProduct = `
-	SELECT total_product
-	FROM store_stats
-	WHERE store_id = $1
+	SELECT COUNT(*) OVER (ROWS BETWEEN CURRENT ROW AND 1000 FOLLOWING) AS total_count
+	FROM products
+	WHERE $1 = '' OR value_text_search @@ plainto_tsquery($1)
 `
 
-func GetTotalProduct(ctx *fiber.Ctx, storeID string) (int64, error) {
+func GetTotalProduct(ctx *fiber.Ctx, search string) (int64, error) {
 	var totalProduct int64
 	db := postgresPkg.GetPgConn()
-	if err := db.GetContext(ctx.Context(), &totalProduct, queryGetTotalProduct, storeID); err != nil {
+	if err := db.GetContext(ctx.Context(), &totalProduct, queryGetTotalProduct, search); err != nil {
 		if err == sql.ErrNoRows {
 			return totalProduct, nil
 		}
@@ -51,15 +51,16 @@ func GetTotalProduct(ctx *fiber.Ctx, storeID string) (int64, error) {
 }
 
 const queryGetTotalInventory = `
-	SELECT total_inventory
-	FROM store_stats
-	WHERE store_id = $1
+	SELECT COUNT(*) OVER (ROWS BETWEEN CURRENT ROW AND 1000 FOLLOWING) AS total_count
+	FROM inventories i
+	INNER JOIN products p on i.plu = p.plu
+	WHERE $1 = '' OR p.value_text_search @@ plainto_tsquery($1)
 `
 
-func GetTotalInventory(ctx *fiber.Ctx, storeID string) (int64, error) {
+func GetTotalInventory(ctx *fiber.Ctx, search string) (int64, error) {
 	var totalInventory int64
 	db := postgresPkg.GetPgConn()
-	if err := db.GetContext(ctx.Context(), &totalInventory, queryGetTotalInventory, storeID); err != nil {
+	if err := db.GetContext(ctx.Context(), &totalInventory, queryGetTotalInventory, search); err != nil {
 		if err == sql.ErrNoRows {
 			return totalInventory, nil
 		}

@@ -9,4 +9,5 @@ import (
 // BuildProductSalesStatsDailyAPI : API to handle product_sales_stats_daily
 func BuildProductSalesStatsDailyAPI(api fiber.Router) {
 	api.Get("/product_sales_stats_daily", statHandler.GetTop3ProductSalesDailyHandler)
+	api.Get("/stats_dashboard", statHandler.GetStatisticDashboard)
 }

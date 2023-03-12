@@ -65,13 +65,28 @@ function clearFormInput() {
     $("#modalUpsert #member_price").val("0");
     $("#modalUpsert #purchase").val("0");
     $("#modalUpsert #discount").val("0");
+    $("#modalUpsert #current_price_form").hide();
 }
 
 function setModalFormatter() {
     $('#modalUpsert #multiplier').number(true, 0, ',', '.');
     $('#modalUpsert #stock').number(true, 0, ',', '.');
+    $('#modalUpsert #current_price').number(true, 0, ',', '.');
     $('#modalUpsert #price').number(true, 0, ',', '.');
     $('#modalUpsert #member_price').number(true, 0, ',', '.');
     $('#modalUpsert #purchase').number(true, 0, ',', '.');
     $('#modalUpsert #discount').number(true, 0, ',', '.');
+    $('#modalUpsert #persentage_price').numeric({decimal: false, negative: false});
 }
+
+$('#modalUpsert #persentage_price').on('input', function () {
+    let currentValue = $(this).val();
+    let valueInt = parseInt(currentValue);
+    if (valueInt > 100) {
+        $(this).val(currentValue.slice(0, -1))
+        valueInt = currentValue.slice(0, -1)
+    }
+    let oldPrice = parseInt($('#modalUpsert #current_price').val())
+    let newPrice = oldPrice + (oldPrice * valueInt / 100)
+    $('#modalUpsert #price').val(newPrice)
+});

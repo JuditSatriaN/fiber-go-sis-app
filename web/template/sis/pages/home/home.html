@@ -17,9 +17,9 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Pendapatan
+                                Total Product Terjual
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_product_terjual_hari_ini"></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -36,9 +36,9 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Pendapatan (Bulan Ini)
+                                Total Pemasukan
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_pemasukan_hari_ini"></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -55,9 +55,9 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Pendapatan (Hari Ini)
+                                Total Pendapatan
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_pendapatan_hari_ini"></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -74,9 +74,9 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Total Transaksi (Hari Ini)
+                                Total Transaksi
                             </div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800" id="total_transaksi_hari_ini"></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -119,10 +119,7 @@
                     <div class="chart-pie pt-4 pb-2">
                         <canvas id="top3ProductSoldToday"></canvas>
                     </div>
-                    <div class="mt-4 text-center small">
-                        <span class="mr-2"><i class="fas fa-circle text-primary"></i> Beras </span>
-                        <span class="mr-2"><i class="fas fa-circle text-success"></i> Gunting</span>
-                        <span class="mr-2"><i class="fas fa-circle text-info"></i> Laptop</span>
+                    <div class="mt-4 text-center small" id="top3ProductSoldTodayText">
                     </div>
                 </div>
             </div>

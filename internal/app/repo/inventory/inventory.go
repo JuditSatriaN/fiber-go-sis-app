@@ -126,3 +126,20 @@ func UpdateStockInventory(ctx *fiber.Ctx, inventory model.Inventory) error {
 	_, err := db.NamedQueryContext(ctx.Context(), queryUpdateStockInventory, inventory)
 	return err
 }
+
+const queryUpdateStockAfterSales = `
+	UPDATE inventories 
+	SET stock = stock - :qty,
+	    update_time = NOW()
+	WHERE id = :id
+`
+
+func UpdateStockAfterSales(tx *sqlx.Tx, data model.UpdateStockAfterSalesData) error {
+	rows, err := tx.NamedQuery(queryUpdateStockAfterSales, data)
+	if err != nil {
+		return err
+	}
+
+	defer rows.Close()
+	return nil
+}
